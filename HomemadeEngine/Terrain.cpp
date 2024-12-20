@@ -18,6 +18,7 @@ bool Terrain::Init(const char* fileName) {
 	InitIndices(m_indices);
 	InitNormals(m_vertices, m_indices);
 	InitTexCoords(m_vertices);
+	CalcTangent(m_vertices, m_indices);
 
 	glGenVertexArrays(1, &m_terrainVAO);
 	glBindVertexArray(m_terrainVAO);
@@ -34,6 +35,9 @@ bool Terrain::Init(const char* fileName) {
 
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertices), (void*)offsetof(Vertices, texCoords));
 	glEnableVertexAttribArray(2);
+
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertices), (void*)offsetof(Vertices, tangent));
+	glEnableVertexAttribArray(3);
 
 	glGenBuffers(1, &m_terrainIBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_terrainIBO);
@@ -61,11 +65,31 @@ void Terrain::SetTexture(const std::vector<image*> image) {
 	m_texture3->SetFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 }
 
+void Terrain::SetMaterial(const image* diffuse, const image* normalMap)
+{
+	m_diffuse = texture::CreateFromImage(diffuse);
+	m_diffuse->SetWrap(GL_REPEAT, GL_REPEAT);
+	m_diffuse->SetFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+
+	m_normalMap = texture::CreateFromImage(normalMap);
+	m_normalMap->SetWrap(GL_REPEAT, GL_REPEAT);
+	m_normalMap->SetFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+}
+
 void Terrain::Draw(const ShaderProgram* program, float yScale, float yShift) const {
 	glBindVertexArray(m_terrainVAO);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDisable(GL_CULL_FACE);
 
+	glActiveTexture(GL_TEXTURE0);
+	m_diffuse->Bind();
+	program->SetUniform("material.diffuse", 0);
+
+	glActiveTexture(GL_TEXTURE1);
+	m_normalMap->Bind();
+	program->SetUniform("material.normalMap", 1);
+
+	/*
 	glActiveTexture(GL_TEXTURE0);
 	m_texture0->Bind();
 	program->SetUniform("tex0", 0);
@@ -81,7 +105,7 @@ void Terrain::Draw(const ShaderProgram* program, float yScale, float yShift) con
 	glActiveTexture(GL_TEXTURE3);
 	m_texture3->Bind();
 	program->SetUniform("tex3", 3);
-
+	*/
 	program->SetUniform("yScale", yScale / 256.0f);
 	program->SetUniform("yShift", yShift);
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
@@ -139,14 +163,64 @@ void Terrain::InitNormals(std::vector<Vertices>& vertices, const std::vector<uns
 	}
 }
 
+void Terrain::CalcTangent(std::vector<Vertices>& vertices, std::vector<uint32_t>& indices)
+{
+	auto compute = [](
+		const glm::vec3& pos1, const glm::vec3& pos2, const glm::vec3& pos3,
+		const glm::vec2& uv1, const glm::vec2& uv2, const glm::vec2& uv3)
+		-> glm::vec3 {
+
+		auto edge1 = pos2 - pos1;
+		auto edge2 = pos3 - pos1;
+		auto deltaUV1 = uv2 - uv1;
+		auto deltaUV2 = uv3 - uv1;
+		float det = (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		if (det != 0.0f) {
+			auto invDet = 1.0f / det;
+			return deltaUV2.y * edge1 - deltaUV1.y * edge2;
+		}
+		else {
+			return glm::vec3(0.0f, 0.0f, 0.0f);
+		}
+	};
+
+	// initialize
+	std::vector<glm::vec3> tangents;
+	tangents.resize(vertices.size());
+	memset(tangents.data(), 0, tangents.size() * sizeof(glm::vec3));
+
+	// accumulate triangle tangents to each vertex
+	for (size_t i = 0; i < indices.size(); i += 3) {
+		auto v1 = indices[i];
+		auto v2 = indices[i + 1];
+		auto v3 = indices[i + 2];
+
+		tangents[v1] += compute(
+			vertices[v1].pos, vertices[v2].pos, vertices[v3].pos,
+			vertices[v1].texCoords, vertices[v2].texCoords, vertices[v3].texCoords);
+
+		tangents[v2] = compute(
+			vertices[v2].pos, vertices[v3].pos, vertices[v1].pos,
+			vertices[v2].texCoords, vertices[v3].texCoords, vertices[v1].texCoords);
+
+		tangents[v3] = compute(
+			vertices[v3].pos, vertices[v1].pos, vertices[v2].pos,
+			vertices[v3].texCoords, vertices[v1].texCoords, vertices[v2].texCoords);
+	}
+
+	// normalize
+	for (size_t i = 0; i < vertices.size(); i++) {
+		vertices[i].tangent = glm::normalize(tangents[i]);
+	}
+}
 
 void Terrain::InitTexCoords(std::vector<Vertices>& vertices) {
 	unsigned int index = 0;
 	//텍스처 좌표 설정
 	for (unsigned i = 0; i < m_height; i++) {
 		for (unsigned j = 0; j < m_width; j++) {
-			vertices[index].texCoords.y = (float)i;
-			vertices[index].texCoords.x = (float)j;
+			vertices[index].texCoords.y = (float)i / 20.0f;
+			vertices[index].texCoords.x = (float)j / 20.0f;
 			index++;
 		}
 	}

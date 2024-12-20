@@ -210,6 +210,7 @@
     <None Include="shader\normal.vs" />
     <None Include="shader\post.fs" />
     <None Include="shader\post.vs" />
+    <None Include="shader\shadowMapping.fs" />
     <None Include="shader\shadowMapping.vs" />
     <None Include="shader\simple.fs" />
     <None Include="shader\simple.vs" />
@@ -247,6 +248,12 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Desktop\wall.jpg" />
+    <Image Include="asset\cube_texture\skybox\back.jpg" />
+    <Image Include="asset\cube_texture\skybox\bottom.jpg" />
+    <Image Include="asset\cube_texture\skybox\front.jpg" />
+    <Image Include="asset\cube_texture\skybox\left.jpg" />
+    <Image Include="asset\cube_texture\skybox\right.jpg" />
+    <Image Include="asset\cube_texture\skybox\top.jpg" />
     <Image Include="asset\model\backpack\ao.jpg" />
     <Image Include="asset\model\backpack\diffuse.jpg" />
     <Image Include="asset\model\backpack\normal.png" />

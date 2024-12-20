@@ -104,6 +104,7 @@
     <None Include="shader\terrain.fs" />
     <None Include="shader\normal.vs" />
     <None Include="shader\normal.fs" />
+    <None Include="shader\shadowMapping.fs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -217,6 +218,24 @@
       <Filter>리소스 파일</Filter>
     </Image>
     <Image Include="asset\texture\heightmap5.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="asset\cube_texture\skybox\back.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="asset\cube_texture\skybox\bottom.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="asset\cube_texture\skybox\front.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="asset\cube_texture\skybox\left.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="asset\cube_texture\skybox\right.jpg">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="asset\cube_texture\skybox\top.jpg">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

@@ -6,7 +6,14 @@ in float height;
 in vec3 fragPos;
 in vec4 fragPos_lightT;
 in vec3 normal;
+in vec3 tangent;
 in vec2 texCoord;
+
+struct Material {
+    sampler2D diffuse;
+    sampler2D normalMap;
+};
+uniform Material material;
 
 uniform sampler2D tex0;
 uniform sampler2D tex1;
@@ -14,6 +21,7 @@ uniform sampler2D tex2;
 uniform sampler2D tex3;
 
 uniform sampler2D shadowMap;
+uniform sampler2D normalMap;
 
 uniform float gHeight0 = 0.5;
 uniform float gHeight1 = 10.0;
@@ -42,10 +50,19 @@ float CalcShadow(vec4 fragPosLight, vec3 lightDir, vec3 normal);
 
 void main()
 {
+    vec3 texNormal = normalize(textureNoTile(material.normalMap, texCoord).xyz * 2.0 - 1.0);
+	vec3 N = normalize(normal);
+	vec3 T = normalize(tangent);
+	vec3 B = cross(T, N);
+	mat3 TBN = mat3(T, B, N);
+	vec3 norm = normalize(TBN * texNormal);
+
+
     vec3 viewdir = normalize(cameraPos - fragPos);
     float h = (height + 16)/32.0f;	// shift and scale the height into a grayscale value
-    vec4 pixelColor = CalcTexColor();
-    vec3 result = CalcDirectionalLight(directionalLight, normal, viewdir, pixelColor.xyz);
+    //vec4 pixelColor = CalcTexColor();
+    vec4 pixelColor = textureNoTile(material.diffuse, texCoord);
+    vec3 result = CalcDirectionalLight(directionalLight, norm, viewdir, pixelColor.xyz);
     FragColor = vec4(result, 1.0);
     //FragColor = pixelColor;
 }
@@ -96,6 +113,8 @@ vec3 CalcDirectionalLight(DirectionalLight light, vec3 norm, vec3 viewDir, vec3 
 	float diff = max(dot(norm, lightDir), 0.0);
     
 	float spec;
+
+    
 	if(blinn == 0) {
 		spec = pow(max(dot(viewDir, reflectDir), 0.0), light.shininess);
 	}
@@ -103,6 +122,7 @@ vec3 CalcDirectionalLight(DirectionalLight light, vec3 norm, vec3 viewDir, vec3 
 		vec3 halfVec = normalize(lightDir + viewDir);
 		spec = pow(max(dot(norm, halfVec), 0.0), light.shininess);
 	}
+    
 
 	vec3 ambient = light.ambient * color;
 	vec3 diffuse = light.diffuse * diff * color;

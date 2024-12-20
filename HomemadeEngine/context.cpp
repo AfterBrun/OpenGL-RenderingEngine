@@ -130,11 +130,14 @@ bool context::Init() {
 	
 	//지형 초기화
 	m_terrain = Terrain::CreateWithHeightMap("./asset/texture/heightmap4.jpg");
+	m_terrain->SetMaterial(image::CreateFromFile("./asset/texture/coast_sand_diff.jpg").get(),
+						   image::CreateFromFile("./asset/texture/coast_sand_nor.jpg").get());
+	/*
 	m_terrain->SetTexture({ image::CreateFromFile("./asset/texture/terrain2.jpg").get(),
 							image::CreateFromFile("./asset/texture/terrain0.jpg").get(),
 							image::CreateFromFile("./asset/texture/terrain1.jpg").get(),
 							image::CreateFromFile("./asset/texture/terrain3.png").get() });
-
+	*/
 	//카메라 객체 생성
 	camera = camera::Create(cameraPos, cameraFront, cameraUp);
 
@@ -250,8 +253,8 @@ void context::Render() {
 	glActiveTexture(GL_TEXTURE3);
 	m_shadowMap->GetDepthTexture()->Bind();
 	lightProgram->SetUniform("shadowMap", 3);
-	//SetLightUniform_Dir(lightProgram.get(), m_light.direction);
-	SetLightUniform_Point(lightProgram.get());
+	SetLightUniform_Dir(lightProgram.get(), m_light.direction);
+	//SetLightUniform_Point(lightProgram.get());
 	glActiveTexture(GL_TEXTURE0);
 
 	RenderScene(lightProgram.get(), projection, view); //씬 드로우

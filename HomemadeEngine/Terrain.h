@@ -9,6 +9,7 @@ struct Vertices {
 	glm::vec3 pos;
 	glm::vec3 normal = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec2 texCoords;
+	glm::vec3 tangent = glm::vec3(0.0f, 0.0f, 0.0f);
 };
 
 class Terrain
@@ -17,14 +18,16 @@ public:
 	static std::unique_ptr<Terrain> CreateWithHeightMap(const char* fileName);
 	~Terrain();
 	void SetTexture(const std::vector<image*> image);
+	void SetMaterial(const image* diffuse, const image* normalMap);
 	int GetWidth() const { return m_width; }
 	int GetHeight() const { return m_height; }
 	void Draw(const ShaderProgram* program, float yScale, float yShift) const;
+	static void CalcTangent(std::vector<Vertices>& vertices, std::vector<uint32_t>& indices);
 private:
 	Terrain() {};
 	bool Init(const char* fileName);
 	void InitVertices(std::vector<Vertices>& vertices);
-	void InitNormals(std::vector<Vertices>& vertices, const std::vector<unsigned int>& indices);
+	void InitNormals(std::vector<Vertices>& vertices, const std::vector<uint32_t>& indices);
 	void InitTexCoords(std::vector<Vertices>& vertices);
 	void InitIndices(std::vector<unsigned int>& indices);
 
@@ -42,6 +45,8 @@ private:
 	std::unique_ptr<texture> m_texture1 = nullptr;
 	std::unique_ptr<texture> m_texture2 = nullptr;
 	std::unique_ptr<texture> m_texture3 = nullptr;
+	std::unique_ptr<texture> m_diffuse = nullptr;
+	std::unique_ptr<texture> m_normalMap = nullptr;
 
 	uint32_t m_terrainVAO = 0;  
 	uint32_t m_terrainVBO = 0;
