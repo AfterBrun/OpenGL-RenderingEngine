@@ -14,6 +14,7 @@
 ### 3. 사용 라이브러리
 * OpenGL 3.3: 3D 렌더링
 * GLFW 3.x: 윈도우 생성 및 이벤트 처리
+* GLAD: OpenGL 함수 로딩 라이브러리
 * Assimp: obj, fbx등 모델 파일 로딩
 * stb_image: image파일 로딩
 * spdlog: 콘솔 log출력
