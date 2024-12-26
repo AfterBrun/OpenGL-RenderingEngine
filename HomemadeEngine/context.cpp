@@ -188,7 +188,7 @@ void context::Render() {
 	//라이트 시점 projection, view 행렬 계산
 	auto lightView = glm::lookAt(m_light.position, m_light.position + m_light.direction, glm::vec3(0.0f, 1.0f, 0.0f));
 	auto lightProjection = glm::perspective(glm::radians((m_light.cutoff.x + m_light.cutoff.y) * 2.0f), 1.0f, 1.0f, 150.0f);
-	auto lightOrtho = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 30.0f);
+	auto lightOrtho = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 200.0f);
 	//auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 30.0f);
 
 	//깊이 버퍼에 깊이값 드로우
@@ -203,6 +203,7 @@ void context::Render() {
 	simpleProgram->Use();
 	simpleProgram->SetUniform("color", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	RenderScene(simpleProgram.get(), lightOrtho, lightView);
+	RenderTerrain(simpleProgram.get(), lightOrtho, lightView);
 	m_shadowMap->BindToDefault();
 	glViewport(0, 0, m_width, m_height);
 	glDisable(GL_POLYGON_OFFSET_FILL);
@@ -228,24 +229,6 @@ void context::Render() {
 	simpleProgram->SetUniform("transform", transform);
 	m_box->Draw(simpleProgram.get());
 	//===================================================================================================================================
-	/*
-	auto modelTransform =
-		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f)) *
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	normalProgram->Use();
-	normalProgram->SetUniform("viewPos", camera->getCameraPos());
-	normalProgram->SetUniform("lightPos", m_light.position);
-	glActiveTexture(GL_TEXTURE0);
-	m_brickDiffuseTexture->Bind();
-	normalProgram->SetUniform("diffuse", 0);
-	glActiveTexture(GL_TEXTURE1);
-	m_brickNormalTexture->Bind();
-	normalProgram->SetUniform("normalMap", 1);
-	glActiveTexture(GL_TEXTURE0);
-	normalProgram->SetUniform("modelTransform", modelTransform);
-	normalProgram->SetUniform("transform", projection * view * modelTransform);
-	m_brickwall->Draw(normalProgram.get());
-	*/
 
 	lightProgram->Use();
 	lightProgram->SetUniform("cameraPos", camera->getCameraPos());
@@ -258,7 +241,15 @@ void context::Render() {
 	glActiveTexture(GL_TEXTURE0);
 
 	RenderScene(lightProgram.get(), projection, view); //씬 드로우
+
+	terrainProgram->Use();
+	terrainProgram->SetUniform("lightTransform", lightOrtho * lightView);
+	glActiveTexture(GL_TEXTURE2);
+	m_shadowMap->GetDepthTexture()->Bind();
+	terrainProgram->SetUniform("shadowMap", 2);
 	RenderTerrain(terrainProgram.get(), projection, view); //지형 드로우
+	glActiveTexture(GL_TEXTURE0);
+
 	RenderSkyBox(skyboxProgram.get(), projection, view); //스카이박스 드로우
 
 	//디폴트 프레임버퍼로 전환 및 m_frameBuffer 텍스처가 입혀진 plane 그리기

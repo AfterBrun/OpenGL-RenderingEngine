@@ -22,7 +22,7 @@ void main() {
 	//height = (aPos.y * yScale) - yShift;
 	height = aPos.y;
 	fragPos = (modelTransform * vec4(aPos, 1.0)).xyz;
-	//fragPos_lightT = lightTransform * vec4(fragPos, 1.0);
+	fragPos_lightT = lightTransform * vec4(fragPos, 1.0);
 
 	mat4 invTransModelTransform = transpose(inverse(modelTransform));
 	normal = (invTransModelTransform * vec4(aNormal, 0.0)).xyz;
