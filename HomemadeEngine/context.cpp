@@ -47,7 +47,6 @@ bool context::Init() {
 	//program 생성
 	simpleProgram = ShaderProgram::CreateShaderProgram("./shader/simple.vs", "./shader/simple.fs");
 	postProgram = ShaderProgram::CreateShaderProgram("./shader/post.vs", "./shader/post.fs");
-	//lightProgram = ShaderProgram::CreateShaderProgram("./shader/light.vs", "./shader/light.fs");
 	lightProgram = ShaderProgram::CreateShaderProgram("./shader/shadowMapping.vs", "./shader/shadowMapping.fs");
 	skyboxProgram = ShaderProgram::CreateShaderProgram("./shader/skybox.vs", "./shader/skybox.fs");
 	instancingProgram = ShaderProgram::CreateShaderProgram("./shader/instancing.vs", "./shader/instancing.fs");
@@ -68,8 +67,7 @@ bool context::Init() {
 	m_grass = Mesh::CreatePlane();
 	m_brickwall = Mesh::CreatePlane();
 
-	
-	//m_chair = Model::LoadModel("./asset/model/chair/chair.fbx");
+	//가방 모델 로딩
 	m_backpack = Model::LoadModel("./asset/model/backpack/backpack.obj");
 
 	std::unique_ptr container2 = image::CreateFromFile("./asset/texture/container2.png");			//이미지 생성
@@ -95,30 +93,6 @@ bool context::Init() {
 	  cubeBack.get(),
 	});
 
-	//인스턴싱을 위한 풀밭 텍스처 및 vao, vbo, ebo 세팅
-	m_grassTexture = texture::CreateFromImage(image::CreateFromFile("./asset/texture/grass.png").get());
-
-	m_grassPos.resize(10000);
-	for (size_t i = 0; i < m_grassPos.size(); i++) {
-		m_grassPos[i].x = ((float)rand() / (float)RAND_MAX * 2.0f - 1.0f) * 5.0f;
-		m_grassPos[i].z = ((float)rand() / (float)RAND_MAX * 2.0f - 1.0f) * 5.0f;
-		m_grassPos[i].y = glm::radians((float)rand() / (float)RAND_MAX * 360.0f);
-	}
-	instanceVao = vertexLayout::CreateVertexLayout();
-	instanceVao->Bind();
-	m_grass->GetVertexBuffer()->Bind();
-	instanceVao->SetAttributePointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	instanceVao->SetAttributePointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Normal));
-	instanceVao->SetAttributePointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, TexCoord));
-
-	instanceVbo = buffer::CreateBuffer(GL_ARRAY_BUFFER, m_grassPos.data(), size_t(m_grassPos.size() * sizeof(glm::vec3)),
-		                               GL_STATIC_DRAW);
-	instanceVbo->Bind();
-	instanceVao->SetAttributePointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
-	glVertexAttribDivisor(3, 1);
-	m_grass->GetElementBuffer()->Bind();
-
-
 	//각종 메쉬 메테리얼 적용
 	m_box->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(container2.get(), "texture_diffuse"));
 	m_box->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(container2_metal.get(), "texture_specular"));
@@ -132,12 +106,7 @@ bool context::Init() {
 	m_terrain = Terrain::CreateWithHeightMap("./asset/texture/heightmap4.jpg");
 	m_terrain->SetMaterial(image::CreateFromFile("./asset/texture/coast_sand_diff.jpg").get(),
 						   image::CreateFromFile("./asset/texture/coast_sand_nor.jpg").get());
-	/*
-	m_terrain->SetTexture({ image::CreateFromFile("./asset/texture/terrain2.jpg").get(),
-							image::CreateFromFile("./asset/texture/terrain0.jpg").get(),
-							image::CreateFromFile("./asset/texture/terrain1.jpg").get(),
-							image::CreateFromFile("./asset/texture/terrain3.png").get() });
-	*/
+
 	//카메라 객체 생성
 	camera = camera::Create(cameraPos, cameraFront, cameraUp);
 
@@ -166,15 +135,16 @@ void context::Render() {
 			ImGui::ColorEdit3("l.diffuse", glm::value_ptr(m_light.diffuse));
 			ImGui::ColorEdit3("l.specular", glm::value_ptr(m_light.specular));
 			ImGui::DragFloat("I.cuttoff", &m_light.cutoff.x);
-			ImGui::Separator();
-			ImGui::Checkbox("Blinn Phong", &m_light.blinn);
+			ImGui::Checkbox("l.Blinn Phong", &m_light.blinn);
+		}
+		if (ImGui::CollapsingHeader("Terrain", ImGuiTreeNodeFlags_DefaultOpen)) { //지형 파라미터
+			ImGui::ColorEdit3("T.ambient", glm::value_ptr(m_terrain_material.ambient));
+			ImGui::ColorEdit3("T.diffuse", glm::value_ptr(m_terrain_material.diffuse));
+			ImGui::ColorEdit3("T.specular", glm::value_ptr(m_terrain_material.specular));
+			ImGui::Checkbox("T.Blinn Phong", &m_terrain_material.blinn);
 		}
 		if (ImGui::CollapsingHeader("material", ImGuiTreeNodeFlags_DefaultOpen)) { //마테리얼 파라미터 조절
 			ImGui::DragFloat("m.shininess", &m_material.shininess, 1.0f, 1.0f, 256.0f); 
-		}
-		if (ImGui::CollapsingHeader("Terrain", ImGuiTreeNodeFlags_DefaultOpen)) { //지형 파라미터
-			ImGui::DragFloat("y Scale", &yScale, 1.0f, 1.0f, 1256.0f); // 지형 높이 스케일 조절(얼마나 지형이 가파른지)
-			ImGui::DragFloat("y Shift", &yShift, 1.0f, 1.0f, 256.0f); // 지형 높이 조절
 		}
 
 		if (ImGui::CollapsingHeader("Shadow Map", ImGuiTreeNodeFlags_DefaultOpen)) {
@@ -383,6 +353,7 @@ void context::RenderSkyBox(const ShaderProgram* program, const glm::mat4& projec
 	m_box->Draw(program);
 	glDepthFunc(GL_LESS);
 
+	//skybox 그리기 2번째 방법
 	/*
 	program->Use();
 	modelTransform = glm::translate(glm::mat4(1.0f), camera->getCameraPos()) *
@@ -416,11 +387,11 @@ void context::RenderTerrain(const ShaderProgram* program, const glm::mat4& proje
 	program->SetUniform("transform", transform);
 	program->SetUniform("modelTransform", modelTransform);
 	program->SetUniform("cameraPos", camera->getCameraPos());
-	program->SetUniform("directionalLight.ambient", m_light.ambient);
-	program->SetUniform("directionalLight.diffuse", m_light.diffuse);
-	program->SetUniform("directionalLight.specular", m_light.specular);
+	program->SetUniform("directionalLight.ambient", m_terrain_material.ambient);
+	program->SetUniform("directionalLight.diffuse", m_terrain_material.diffuse);
+	program->SetUniform("directionalLight.specular", m_terrain_material.specular);
 	program->SetUniform("directionalLight.direction", m_light.direction);
 	program->SetUniform("directionalLight.shininess", m_material.shininess);
-	program->SetUniform("blinn", m_light.blinn ? 1 : 0);
-	m_terrain->Draw(program, yScale, yShift);
+	program->SetUniform("blinn", m_terrain_material.blinn ? 1 : 0);
+	m_terrain->Draw(program, 0, 0);
 }

@@ -57,25 +57,21 @@ void main()
 	mat3 TBN = mat3(T, B, N);
 	vec3 norm = normalize(TBN * texNormal);
 
-
     vec3 viewdir = normalize(cameraPos - fragPos);
-    float h = (height + 16)/32.0f;	// shift and scale the height into a grayscale value
-    //vec4 pixelColor = CalcTexColor();
     vec4 pixelColor = textureNoTile(material.diffuse, texCoord);
     vec3 result = CalcDirectionalLight(directionalLight, norm, viewdir, pixelColor.xyz);
     FragColor = vec4(result, 1.0);
-    //FragColor = pixelColor;
 }
-
+/*
 vec4 CalcTexColor() {
     vec4 texColor;
     if(height < gHeight0) {
-        //texColor = texture(tex0, texCoord);
+        texColor = texture(tex0, texCoord);
         texColor = textureNoTile(tex0, texCoord);
     }
     else if(height < gHeight1) {
-        //vec4 color0 = texture(tex0, texCoord);
-        //vec4 color1 = texture(tex1, texCoord);
+        vec4 color0 = texture(tex0, texCoord);
+        vec4 color1 = texture(tex1, texCoord);
         vec4 color0 = textureNoTile(tex0, texCoord);
         vec4 color1 = textureNoTile(tex1, texCoord);
         float delta = gHeight1 - gHeight0;
@@ -83,8 +79,8 @@ vec4 CalcTexColor() {
         texColor = mix(color0, color1, factor);
     }
     else if(height < gHeight2) {
-        //vec4 color0 = texture(tex1, texCoord);
-        //vec4 color1 = texture(tex2, texCoord);
+        vec4 color0 = texture(tex1, texCoord);
+        vec4 color1 = texture(tex2, texCoord);
         vec4 color0 = textureNoTile(tex1, texCoord);
         vec4 color1 = textureNoTile(tex2, texCoord);
         float delta = gHeight2 - gHeight1;
@@ -92,8 +88,8 @@ vec4 CalcTexColor() {
         texColor = mix(color0, color1, factor);
     }
     else if(height < gHeight3) {
-        //vec4 color0 = texture(tex2, texCoord);
-        //vec4 color1 = texture(tex3, texCoord);
+        vec4 color0 = texture(tex2, texCoord);
+        vec4 color1 = texture(tex3, texCoord);
         vec4 color0 = textureNoTile(tex2, texCoord);
         vec4 color1 = textureNoTile(tex3, texCoord);
         float delta = gHeight3 - gHeight2;
@@ -105,7 +101,7 @@ vec4 CalcTexColor() {
     }
     return texColor;
 }
-
+*/
 vec3 CalcDirectionalLight(DirectionalLight light, vec3 norm, vec3 viewDir, vec3 color) {
 	vec3 lightDir = normalize(-light.direction);
 	vec3 reflectDir = reflect(-lightDir, norm);
@@ -135,7 +131,6 @@ vec3 CalcDirectionalLight(DirectionalLight light, vec3 norm, vec3 viewDir, vec3 
     
 
 	return (ambient + diffuse + specular);
-    //return (ambient + diffuse);
 }
 
 vec4 textureNoTile( sampler2D samp, in vec2 uv )

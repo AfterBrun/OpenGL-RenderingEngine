@@ -202,6 +202,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="asset\model\backpack\backpack.mtl" />
+    <None Include="assimp-vc142-mtd.dll" />
     <None Include="shader\instancing.fs" />
     <None Include="shader\instancing.vs" />
     <None Include="shader\light.fs" />

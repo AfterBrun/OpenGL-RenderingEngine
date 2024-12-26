@@ -105,6 +105,7 @@
     <None Include="shader\normal.vs" />
     <None Include="shader\normal.fs" />
     <None Include="shader\shadowMapping.fs" />
+    <None Include="assimp-vc142-mtd.dll" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">

@@ -195,7 +195,7 @@ void Terrain::CalcTangent(std::vector<Vertices>& vertices, std::vector<uint32_t>
 		auto v2 = indices[i + 1];
 		auto v3 = indices[i + 2];
 
-		tangents[v1] += compute(
+		tangents[v1] += compute( //≈∫¡®∆Æ¿« ∆Ú±’¿ª ±∏«—¥Ÿ
 			vertices[v1].pos, vertices[v2].pos, vertices[v3].pos,
 			vertices[v1].texCoords, vertices[v2].texCoords, vertices[v3].texCoords);
 

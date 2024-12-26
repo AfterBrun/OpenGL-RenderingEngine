@@ -76,8 +76,6 @@ private:
 
 	//terrain
 	std::unique_ptr<Terrain> m_terrain = nullptr;
-	float yScale = 64.0f; 
-	float yShift = 16.0f;
 
 	//model
 	std::unique_ptr<Model> m_backpack = nullptr;
@@ -114,6 +112,14 @@ private:
 		bool blinn = true;
 	};
 	Light m_light;
+
+	struct Terrain_Material {
+		glm::vec3 ambient{ glm::vec3(0.1f, 0.1f, 0.1f) };
+		glm::vec3 diffuse{ glm::vec3(0.5f, 0.5f, 0.5f) };
+		glm::vec3 specular{ glm::vec3(0.5f, 0.5f, 0.5f) };
+		bool blinn = true;
+	};
+	Terrain_Material m_terrain_material;
 
 	// material parameter
 	struct Material {
