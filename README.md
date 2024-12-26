@@ -16,10 +16,10 @@
 * GLFW 3.x: 윈도우 생성 및 이벤트 처리
 * GLAD: OpenGL 함수 로딩 라이브러리
 * Assimp: obj, fbx등 모델 파일 로딩
-* stb_image: image파일 로딩
-* spdlog: 콘솔 log출력
-* GLM: 선형수학 라이브러리
-* ImGui: Ui 렌더링
+* stb_image: image파일 로딩 / MIT license
+* spdlog: 콘솔 log출력 / MIT license
+* GLM: 선형수학 라이브러리 
+* ImGui: Ui 렌더링 / MIT license
 
 ### 4. 개발 환경
 * Visual Studio 2019
@@ -29,3 +29,15 @@
 * 카메라 이동:
   * 마우스 오른쪽을 누른상태로 W, A, S, D: 이동
   * 마우스 오른쪽을 누른상태로 R: 위로, F: 아래로
+
+### 6. Future Study List
+* Bloom
+* PBR(Physics based rendering)
+* Cascaded Shadow Mapping
+* Geo Mipmaping(QuadTree, Tessellation shader)
+* Displacement mapping
+* Ray Marching, Ray Tracing
+* Texture noise based procedurally generated terrain
+    * perlin noise
+    * Hydraulic erosion algorithm
+* Volumetric cloud
