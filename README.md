@@ -11,6 +11,8 @@
 4. Height Map을 이용한 지형 렌더링
 5. Assimp를 활용한 모델 불러오기
 
+[기술 설명서 링크](https://chalk-playroom-034.notion.site/OpenGL-Renderer-1697e21379dd8007aaacf9f8b2b6d786?pvs=4)
+
 ### 3. 사용 라이브러리
 * OpenGL 3.3: 3D 렌더링
 * GLFW 3.x: 윈도우 생성 및 이벤트 처리
