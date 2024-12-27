@@ -54,6 +54,11 @@ private:
 	std::unique_ptr<ShaderProgram> terrainProgram = nullptr;
 	std::unique_ptr<ShaderProgram> normalProgram = nullptr;
 
+
+	std::unique_ptr<vertexLayout> instanceVao = nullptr;
+	std::unique_ptr<buffer> instanceVbo = nullptr;
+	std::unique_ptr<buffer> instanceEbo = nullptr;
+
 	//frame buffer
 	std::unique_ptr<FrameBuffer> m_frameBuffer = nullptr;
 	//shadow map
@@ -66,6 +71,7 @@ private:
 	std::unique_ptr<Mesh> m_box = nullptr;
 	std::unique_ptr<Mesh> m_floor = nullptr;
 	std::unique_ptr<Mesh> m_plane = nullptr;
+	std::unique_ptr<Mesh> m_grass = nullptr;
 	std::unique_ptr<Mesh> m_brickwall = nullptr;
 
 	//terrain
