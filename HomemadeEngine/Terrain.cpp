@@ -76,7 +76,7 @@ void Terrain::SetMaterial(const image* diffuse, const image* normalMap)
 	m_normalMap->SetFilter(GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 }
 
-void Terrain::Draw(const ShaderProgram* program, float yScale, float yShift) const {
+void Terrain::Draw(const ShaderProgram* program) const {
 	glBindVertexArray(m_terrainVAO);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDisable(GL_CULL_FACE);
@@ -106,8 +106,6 @@ void Terrain::Draw(const ShaderProgram* program, float yScale, float yShift) con
 	m_texture3->Bind();
 	program->SetUniform("tex3", 3);
 	*/
-	program->SetUniform("yScale", yScale / 256.0f);
-	program->SetUniform("yShift", yShift);
 	glDrawElements(GL_TRIANGLES, m_indices.size(), GL_UNSIGNED_INT, 0);
 	glActiveTexture(GL_TEXTURE0);
 }
@@ -129,7 +127,7 @@ void Terrain::InitVertices(std::vector<Vertices>& vertices) {
 
 	vertices.resize(m_width * m_height);
 
-	float yScale = 64.0f / 256.0f;
+	float yScale = 64.0f / 256.0f; //높이 조절
 	unsigned int index = 0;
 	for (unsigned int i = 0; i < m_height; i++) {
 		for (unsigned int j = 0; j < m_width; j++) {
@@ -137,7 +135,6 @@ void Terrain::InitVertices(std::vector<Vertices>& vertices) {
 			unsigned char y = pixelOffset[0];
 			vertices[index].pos.x = (-m_height / 2.0f + i);        // v.x
 			vertices[index].pos.y = y * yScale - 20.0f;				   // v.y
-			//vertices[index].pos.y = y;							   // v.y
 			vertices[index].pos.z = (-m_width / 2.0f + j);         // v.z
 			index++;
 		}

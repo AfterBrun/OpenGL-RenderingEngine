@@ -4,6 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <optional>
 #include <fstream>
 #include <sstream>
 #include <glm/glm.hpp>

@@ -64,7 +64,6 @@ bool context::Init() {
 	m_box = Mesh::CreateBox();
 	m_floor = Mesh::CreateBox();
 	m_plane = Mesh::CreatePlane();
-	m_grass = Mesh::CreatePlane();
 	m_brickwall = Mesh::CreatePlane();
 
 	//가방 모델 로딩
@@ -393,5 +392,5 @@ void context::RenderTerrain(const ShaderProgram* program, const glm::mat4& proje
 	program->SetUniform("directionalLight.direction", m_light.direction);
 	program->SetUniform("directionalLight.shininess", m_material.shininess);
 	program->SetUniform("blinn", m_terrain_material.blinn ? 1 : 0);
-	m_terrain->Draw(program, 0, 0);
+	m_terrain->Draw(program);
 }

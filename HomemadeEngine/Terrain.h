@@ -21,7 +21,7 @@ public:
 	void SetMaterial(const image* diffuse, const image* normalMap);
 	int GetWidth() const { return m_width; }
 	int GetHeight() const { return m_height; }
-	void Draw(const ShaderProgram* program, float yScale, float yShift) const;
+	void Draw(const ShaderProgram* program) const;
 	static void CalcTangent(std::vector<Vertices>& vertices, std::vector<uint32_t>& indices);
 private:
 	Terrain() {};
