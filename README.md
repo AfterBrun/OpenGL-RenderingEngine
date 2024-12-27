@@ -10,6 +10,7 @@
 3. Shadow Map
 4. Height Map을 이용한 지형 렌더링
 5. Assimp를 활용한 모델 불러오기
+[기술설명서](https://www.notion.so/OpenGL-Renderer-1697e21379dd8007aaacf9f8b2b6d786?pvs=4)
 
 ### 3. 사용 라이브러리
 * OpenGL 3.3: 3D 렌더링
