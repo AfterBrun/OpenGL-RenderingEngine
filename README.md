@@ -7,7 +7,7 @@
 ### 2. 적용 기술
 1. Blinn Phong Shading
 2. Normal Map
-3. Shadow Map [기술 설명](https://github.com/AfterBrun/OpenGL-RenderingEngine/blob/master/HomemadeEngine/shader/shadowMapping.vs)
+3. Shadow Map
 4. Height Map을 이용한 지형 렌더링
 5. Assimp를 활용한 모델 불러오기
 
