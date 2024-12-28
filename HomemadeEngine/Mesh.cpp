@@ -43,14 +43,14 @@ void Mesh::Draw(const ShaderProgram* program) {
             specularNr++;
         }
         else if (type == "texture_normal") {
-            number = std::to_string(specularNr);
+            number = std::to_string(normalNR);
             normalNR++;
         }
         program->SetUniform(("material." + type + number).c_str(), i);
         m_materials[i]->Bind();
     }
-    glActiveTexture(GL_TEXTURE0);
     glDrawElements(GL_TRIANGLES, m_indicesCount, GL_UNSIGNED_INT, 0);
+    glActiveTexture(GL_TEXTURE0);
 }
 
 std::unique_ptr<Mesh> Mesh::CreateBox() {

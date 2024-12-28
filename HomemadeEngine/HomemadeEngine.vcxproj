@@ -178,7 +178,6 @@
   <ItemGroup>
     <ClCompile Include="buffer.cpp" />
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="Camera2.cpp" />
     <ClCompile Include="common.cpp" />
     <ClCompile Include="context.cpp" />
     <ClCompile Include="FrameBuffer.cpp" />
@@ -225,7 +224,6 @@
   <ItemGroup>
     <ClInclude Include="buffer.h" />
     <ClInclude Include="camera.h" />
-    <ClInclude Include="Camera2.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="context.h" />
     <ClInclude Include="FrameBuffer.h" />

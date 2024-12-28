@@ -69,12 +69,13 @@ bool context::Init() {
 	//가방 모델 로딩
 	m_backpack = Model::LoadModel("./asset/model/backpack/backpack.obj");
 
-	std::unique_ptr container2 = image::CreateFromFile("./asset/texture/container2.png");			//이미지 생성
-	std::unique_ptr container2_metal = image::CreateFromFile("./asset/texture/container2_specular.png");
-	std::unique_ptr floorImage = image::CreateFromFile("./asset/texture/marble.jpg");
-	std::unique_ptr brickwall_texture = image::CreateFromFile("./asset/texture/brickwall.jpg");
-	std::unique_ptr brickwall_normal = image::CreateFromFile("./asset/texture/brickwall_normal.jpg");
-	
+	auto container2 = image::CreateFromFile("./asset/texture/container2.png");			//이미지 생성
+	auto container2_metal = image::CreateFromFile("./asset/texture/container2_specular.png");
+	auto floorImage = image::CreateFromFile("./asset/texture/marble.jpg");
+	auto brickwall_texture = image::CreateFromFile("./asset/texture/brickwall.jpg");
+	auto brickwall_normal = image::CreateFromFile("./asset/texture/brickwall_normal.jpg");
+	auto defualt_normal = image::CreateFromFile("./asset/texture/default_normal.png");
+
 
 	//스카이박스 초기화
 	auto cubeRight = image::CreateFromFile("./asset/cube_texture/skybox/right.jpg", false);
@@ -95,12 +96,18 @@ bool context::Init() {
 	//각종 메쉬 메테리얼 적용
 	m_box->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(container2.get(), "texture_diffuse"));
 	m_box->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(container2_metal.get(), "texture_specular"));
-	m_floor->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(floorImage.get(), "texture_diffuse"));
-	m_floor->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(floorImage.get(), "texture_diffuse"));
+	m_box->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(defualt_normal.get(), "texture_normal"));
 
-	m_brickDiffuseTexture = texture::CreateFromImage(brickwall_texture.get(), "texture_diffuse");
-	m_brickNormalTexture = texture::CreateFromImage(brickwall_normal.get(), "texture_normal");
+	m_floor->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(floorImage.get(), "texture_diffuse"));
+	m_floor->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(floorImage.get(), "texture_specular"));
+	m_floor->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(defualt_normal.get(), "texture_normal"));
+
 	
+	m_brickwall->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(brickwall_texture.get(), "texture_diffuse"));
+	m_brickwall->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(brickwall_texture.get(), "texture_specular"));
+	m_brickwall->GetMaterialArrayPtr()->push_back(texture::CreateFromImage(brickwall_normal.get(), "texture_normal"));
+	
+
 	//지형 초기화
 	m_terrain = Terrain::CreateWithHeightMap("./asset/texture/heightmap4.jpg");
 	m_terrain->SetMaterial(image::CreateFromFile("./asset/texture/coast_sand_diff.jpg").get(),
@@ -314,30 +321,20 @@ void context::RenderScene(const ShaderProgram* program, const glm::mat4& project
 	m_box->Draw(program);
 
 	modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 2.0f, 0.0f)) *
-		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	transform = projection * view * modelTransform;
 	program->SetUniform("transform", transform);
 	program->SetUniform("modelTransform", modelTransform);
 	m_backpack->Draw(program);
-
+	
 	modelTransform =
 		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f)) *
 		glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	glActiveTexture(GL_TEXTURE0);
-	m_brickDiffuseTexture->Bind();
-	program->SetUniform("material.texture_diffuse1", 0);
-	glActiveTexture(GL_TEXTURE1);
-	m_brickDiffuseTexture->Bind();
-	program->SetUniform("material.texture_specular1", 1);
-	glActiveTexture(GL_TEXTURE2);
-	m_brickNormalTexture->Bind();
-	program->SetUniform("material.texture_normal1", 2);
-	glActiveTexture(GL_TEXTURE0);
 	transform = projection * view * modelTransform;
 	program->SetUniform("transform", transform);
 	program->SetUniform("modelTransform", modelTransform);
 	m_brickwall->Draw(program);
+	
 }
 
 void context::RenderSkyBox(const ShaderProgram* program, const glm::mat4& projection, const glm::mat4& view) {
