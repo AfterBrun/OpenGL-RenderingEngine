@@ -32,6 +32,10 @@
   * 마우스 오른쪽을 누른상태로 W, A, S, D: 이동
   * 마우스 오른쪽을 누른상태로 R: 위로, F: 아래로
 
+### 6. 시연
+[Shadow Map 시연](https://github.com/AfterBrun/OpenGL-RenderingEngine/issues/2#issue-2761667069)
+
+
 ### 6. Future Study List
 * Bloom
 * PBR(Physics based rendering)
