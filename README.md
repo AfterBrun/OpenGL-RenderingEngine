@@ -44,6 +44,7 @@
 * Cascaded Shadow Mapping
 * Geo Mipmaping(QuadTree, Tessellation shader)
 * Displacement mapping
+* Frustum Culling, Oclusion Culling
 * Ray Marching, Ray Tracing
 * Texture noise based procedurally generated terrain
     * perlin noise
