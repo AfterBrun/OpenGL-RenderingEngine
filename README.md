@@ -23,9 +23,10 @@
 * GLM: 선형수학 라이브러리 
 * ImGui: Ui 렌더링 / MIT license
 
-### 4. 개발 환경
+### 4. 개발 환경 및 실행 환경
 * Visual Studio 2019
 * C++20
+* Windows 10
 
 ### 5. 사용법
 * 카메라 이동:
