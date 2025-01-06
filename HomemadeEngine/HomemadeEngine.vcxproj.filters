@@ -81,6 +81,9 @@
     <ClCompile Include="Terrain.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\texture.fs" />
@@ -169,6 +172,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -30,6 +30,13 @@ bool ShadowMap::Init(int width, int height) {
 	return true;
 }
 
+void ShadowMap::CalcTightLightProjection(const glm::mat4& cameraViewProj, const glm::vec3& lightDir, 
+										 const PerspectiveProjInfo persprojInfo,
+										 glm::vec3* lightWorldPos, LightOrthoProjInfo* resultInfo)
+{
+	
+}
+
 ShadowMap::~ShadowMap() {
 	if (m_frameBufferID) {
 		glDeleteFramebuffers(1, &m_frameBufferID);

@@ -165,7 +165,6 @@ void context::Render() {
 	auto lightView = glm::lookAt(m_light.position, m_light.position + m_light.direction, glm::vec3(0.0f, 1.0f, 0.0f));
 	auto lightProjection = glm::perspective(glm::radians((m_light.cutoff.x + m_light.cutoff.y) * 2.0f), 1.0f, 1.0f, 150.0f);
 	auto lightOrtho = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 200.0f);
-	//auto lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 30.0f);
 
 	//깊이 버퍼에 깊이값 드로우
 	m_shadowMap->Bind();
