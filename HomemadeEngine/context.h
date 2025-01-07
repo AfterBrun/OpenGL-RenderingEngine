@@ -44,6 +44,7 @@ private:
 	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	std::unique_ptr<camera> camera = nullptr;
+	PerspectiveProjInfo perspectiveProjInfo;
 
 	//program, vao, vbo, ebo
 	std::unique_ptr<ShaderProgram> simpleProgram = nullptr;

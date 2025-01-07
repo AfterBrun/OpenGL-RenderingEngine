@@ -159,12 +159,23 @@ void context::Render() {
 	}
 	ImGui::End();
 	
+	perspectiveProjInfo.fov = glm::radians(45.0f);
+	perspectiveProjInfo.width = (float)m_width;
+	perspectiveProjInfo.height = (float)m_height;
+	perspectiveProjInfo.zNear = 0.01f;
+	perspectiveProjInfo.zFar = 200.0f;
 
 	//셰도우 매핑
 	//라이트 시점 projection, view 행렬 계산
-	auto lightView = glm::lookAt(m_light.position, m_light.position + m_light.direction, glm::vec3(0.0f, 1.0f, 0.0f));
-	auto lightProjection = glm::perspective(glm::radians((m_light.cutoff.x + m_light.cutoff.y) * 2.0f), 1.0f, 1.0f, 150.0f);
-	auto lightOrtho = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 1.0f, 200.0f);
+	OrthoProjInfo orthoInfo;
+	glm::vec3 lightPos;
+	m_shadowMap->CalcTightLightProjection(camera->getViewMatrix(), m_light.direction, perspectiveProjInfo,
+		lightPos, orthoInfo);
+
+	auto lightView = glm::lookAt(lightPos, lightPos + m_light.direction, glm::vec3(0.0f, 1.0f, 0.0f));
+	//auto lightProjection = glm::perspective(glm::radians((m_light.cutoff.x + m_light.cutoff.y) * 2.0f), 1.0f, 1.0f, 150.0f);
+	auto lightOrtho = glm::ortho(orthoInfo.left, orthoInfo.right, orthoInfo.bottom, orthoInfo.top, 
+		orthoInfo.zNear, orthoInfo.zFar);
 
 	//깊이 버퍼에 깊이값 드로우
 	m_shadowMap->Bind();
@@ -191,7 +202,10 @@ void context::Render() {
 	glEnable(GL_CULL_FACE);
 	
 	auto view = camera->getViewMatrix();
-	auto projection = glm::perspective(glm::radians(45.0f), (float)m_width / (float)m_height, 0.01f, 1000.0f);
+	auto projection = glm::perspective(perspectiveProjInfo.fov, 
+									   perspectiveProjInfo.width / perspectiveProjInfo.height, 
+									   perspectiveProjInfo.zNear, 
+									   perspectiveProjInfo.zFar);
 
 
 	//광원큐브 그리기

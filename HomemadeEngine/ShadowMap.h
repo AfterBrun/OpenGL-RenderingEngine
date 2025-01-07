@@ -16,8 +16,8 @@ public:
 	void CalcTightLightProjection(const glm::mat4& cameraViewProj,        //in 
 								  const glm::vec3& lightDir,			  //in
 								  const PerspectiveProjInfo persprojInfo, //in
-								  glm::vec3* lightWorldPos,				  //out
-								  LightOrthoProjInfo* resultInfo);		  //out
+								  glm::vec3& lightWorldPos,				  //out
+								  OrthoProjInfo& resultInfo);		  //out
 	~ShadowMap();
 private:
 	ShadowMap() {};
