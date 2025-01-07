@@ -31,13 +31,13 @@ bool ShadowMap::Init(int width, int height) {
 }
 
 void ShadowMap::CalcTightLightProjection(const glm::mat4& cameraViewProj, const glm::vec3& lightDir, 
-										 const PerspectiveProjInfo persprojInfo,
+										 const PerspectiveProjInfo& persprojInfo,
 										 glm::vec3& lightWorldPos, OrthoProjInfo& resultInfo)
 {
 	//단계 1: frustum corners의 view space에서의 좌표를 계산
 	Frustum frustum;
 	frustum.CalcCorners(persprojInfo);
-
+	
 	//단계 2: frustum corners의 world space로 변환
 	glm::mat4 invCameraView = glm::inverse(cameraViewProj);
 	frustum.Transform(invCameraView);

@@ -159,11 +159,11 @@ void context::Render() {
 	}
 	ImGui::End();
 	
-	perspectiveProjInfo.fov = glm::radians(45.0f);
+	perspectiveProjInfo.fov = 45.0f;
 	perspectiveProjInfo.width = (float)m_width;
 	perspectiveProjInfo.height = (float)m_height;
 	perspectiveProjInfo.zNear = 0.01f;
-	perspectiveProjInfo.zFar = 200.0f;
+	perspectiveProjInfo.zFar = 400.0f;
 
 	//셰도우 매핑
 	//라이트 시점 projection, view 행렬 계산
@@ -202,7 +202,7 @@ void context::Render() {
 	glEnable(GL_CULL_FACE);
 	
 	auto view = camera->getViewMatrix();
-	auto projection = glm::perspective(perspectiveProjInfo.fov, 
+	auto projection = glm::perspective(glm::radians(perspectiveProjInfo.fov), 
 									   perspectiveProjInfo.width / perspectiveProjInfo.height, 
 									   perspectiveProjInfo.zNear, 
 									   perspectiveProjInfo.zFar);

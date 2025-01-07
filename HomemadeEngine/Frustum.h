@@ -20,13 +20,13 @@ struct PerspectiveProjInfo {
 
 class AABB {
 public:
-	float MinX = FLT_MAX;
-	float MinY = FLT_MAX;
-	float MinZ = FLT_MAX;
+	float MinX = std::numeric_limits<float>::max();
+	float MinY = std::numeric_limits<float>::max();
+	float MinZ = std::numeric_limits<float>::max();
 
-	float MaxX = FLT_MIN;
-	float MaxY = FLT_MIN;
-	float MaxZ = FLT_MIN;
+	float MaxX = std::numeric_limits<float>::lowest();
+	float MaxY = std::numeric_limits<float>::lowest();
+	float MaxZ = std::numeric_limits<float>::lowest();
 
 public:
 	AABB() {};
@@ -55,15 +55,15 @@ public:
 class Frustum
 {
 public:
-	glm::vec4 nearTopLeft{0.0f, 0.0f, 0.0f, 1.0f};
-	glm::vec4 nearTopRight{ 0.0f, 0.0f, 0.0f, 1.0f };
-	glm::vec4 nearBottomLeft{ 0.0f, 0.0f, 0.0f, 1.0f };
-	glm::vec4 nearBottomRight{ 0.0f, 0.0f, 0.0f, 1.0f };
+	glm::vec4 nearTopLeft{-1.0f, 1.0f, 1.0f, 1.0f};
+	glm::vec4 nearTopRight{ 1.0f, 1.0f, 1.0f, 1.0f };
+	glm::vec4 nearBottomLeft{ -1.0f, -1.0f, 1.0f, 1.0f };
+	glm::vec4 nearBottomRight{ 1.0f, -1.0f, 1.0f, 1.0f };
 
-	glm::vec4 farTopLeft{ 0.0f, 0.0f, 0.0f, 1.0f };
-	glm::vec4 farTopRight{ 0.0f, 0.0f, 0.0f, 1.0f };
-	glm::vec4 farBottomLeft{ 0.0f, 0.0f, 0.0f, 1.0f };
-	glm::vec4 farBottomRight{ 0.0f, 0.0f, 0.0f, 1.0f };
+	glm::vec4 farTopLeft{ -1.0f, 1.0f, -1.0f, 1.0f };
+	glm::vec4 farTopRight{ 1.0f, 1.0f, -1.0f, 1.0f };
+	glm::vec4 farBottomLeft{ -1.0f, -1.0f, -1.0f, 1.0f };
+	glm::vec4 farBottomRight{ 1.0f, -1.0f, -1.0f, 1.0f };
 
 public:
 	void CalcCorners(PerspectiveProjInfo info);

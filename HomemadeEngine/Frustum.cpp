@@ -3,7 +3,7 @@
 void Frustum::CalcCorners(PerspectiveProjInfo info)
 {
 	float AR = info.height / info.width;
-	float tanHalfFov = glm::tan(info.fov / 2.0f);
+	float tanHalfFov = std::tanf(glm::radians(info.fov / 2.0f));
 	float nearZ = info.zNear;
 	float nearX = nearZ * tanHalfFov;
 	float nearY = nearZ * tanHalfFov * AR;

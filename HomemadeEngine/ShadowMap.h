@@ -15,9 +15,9 @@ public:
 	const texture* GetDepthTexture() { return m_depthTexture.get(); }
 	void CalcTightLightProjection(const glm::mat4& cameraViewProj,        //in 
 								  const glm::vec3& lightDir,			  //in
-								  const PerspectiveProjInfo persprojInfo, //in
+								  const PerspectiveProjInfo& persprojInfo,//in
 								  glm::vec3& lightWorldPos,				  //out
-								  OrthoProjInfo& resultInfo);		  //out
+								  OrthoProjInfo& resultInfo);			  //out
 	~ShadowMap();
 private:
 	ShadowMap() {};
