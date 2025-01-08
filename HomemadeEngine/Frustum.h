@@ -1,6 +1,8 @@
 #pragma once
 #include "common.h"
 
+#define VOLUME_BIAS 30.0f
+
 struct OrthoProjInfo {
 	float left;
 	float right;
@@ -43,12 +45,12 @@ public:
 	}
 
 	void UpdataOrthoInfo(OrthoProjInfo& info) {
-		info.right = MaxX;
-		info.left = MinX;
-		info.bottom = MinY;
-		info.top = MaxY;
-		info.zNear = MinZ;
-		info.zFar = MaxZ;
+		info.right = MaxX + VOLUME_BIAS;
+		info.left = MinX - VOLUME_BIAS;
+		info.bottom = MinY - VOLUME_BIAS;
+		info.top = MaxY + VOLUME_BIAS;
+		info.zNear = -(MaxZ + VOLUME_BIAS);
+		info.zFar = -MinZ + VOLUME_BIAS;
 	}
 };
 
@@ -69,6 +71,7 @@ public:
 	void CalcCorners(PerspectiveProjInfo info);
 	void Transform(const glm::mat4& m);
 	void CalcAABB(AABB& aabb);
+	void PrintFrustum();
 
 	Frustum() {};
 	~Frustum() {};

@@ -42,6 +42,7 @@ void ShadowMap::CalcTightLightProjection(const glm::mat4& cameraViewProj, const 
 	glm::mat4 invCameraView = glm::inverse(cameraViewProj);
 	frustum.Transform(invCameraView);
 	Frustum worldSpaceFrustrum = frustum;
+	//worldSpaceFrustrum.PrintFrustum();
 
 	//단계 3: frustum corners의 light space로 변환(1차: 회전 변환만 적용됨)
 	glm::mat4 lightView;
@@ -55,8 +56,8 @@ void ShadowMap::CalcTightLightProjection(const glm::mat4& cameraViewProj, const 
 	frustum.CalcAABB(aabb);
 
 	//단계 5: light space에서 light Position을 다시 계산
-	glm::vec3 bottomLeft = glm::vec3(aabb.MinX, aabb.MinY, aabb.MinZ);
-	glm::vec3 topRight = glm::vec3(aabb.MaxX, aabb.MaxY, aabb.MinZ);
+	glm::vec3 bottomLeft = glm::vec3(aabb.MinX, aabb.MinY, aabb.MaxZ);
+	glm::vec3 topRight = glm::vec3(aabb.MaxX, aabb.MaxY, aabb.MaxZ);
 	glm::vec4 lightPos_lightSpace = glm::vec4((bottomLeft + topRight) / 2.0f, 1.0f);
 
 	//단계 6: light position을 light space -> world space로 변환
