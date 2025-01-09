@@ -15,8 +15,15 @@ void vertexLayout::init() {
 void vertexLayout::SetAttributePointer(GLuint location, GLint size, GLenum data_type, 
 									   GLboolean normalized, GLsizei stride, int offset) 
 {
-	glVertexAttribPointer(location, size, data_type, normalized, stride, (void*)offset);
 	glEnableVertexAttribArray(location);
+	glVertexAttribPointer(location, size, data_type, normalized, stride, (void*)offset);
+}
+
+void vertexLayout::SetAttributeIPointer(GLuint location, GLint size, GLenum data_type,
+										GLsizei stride, int offset)
+{
+	glEnableVertexAttribArray(location);
+	glVertexAttribIPointer(location, size, data_type, stride, (void*)offset);
 }
 
 vertexLayout::~vertexLayout() {

@@ -70,6 +70,8 @@ void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		m_vertices.push_back(vertex);
 	}
 
+
+
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
@@ -127,5 +129,13 @@ void Model::ShowVertices(std::vector<Vertex>& vertices) {
 		SPDLOG_INFO("position {}, {}, {}, normal {}, {}, {}, texcoord {}, {}", vertices[i].Position.x, vertices[i].Position.y,
 			vertices[i].Position.z, vertices[i].Normal.x, vertices[i].Normal.y, vertices[i].Normal.z, vertices[i].TexCoord.x,
 			vertices[i].TexCoord.y);
+	}
+}
+
+void Model::SetVertexBoneDataToDefault(Vertex& vertex)
+{
+	for (int i = 0; i < MAX_BONE_INFLUENCE; i++) {
+		vertex.boneIDs[i] = -1;
+		vertex.weights[i] = 0.0f;
 	}
 }

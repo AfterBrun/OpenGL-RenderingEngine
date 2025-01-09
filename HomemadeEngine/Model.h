@@ -7,6 +7,10 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+struct BoneInfo {
+	int id;
+	glm::mat4 offset;
+};
 
 class Model
 {
@@ -21,10 +25,16 @@ private:
 	void ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	void loadMaterialTextures(aiMaterial* material, aiTextureType type, const char* string);
 	void ShowVertices(std::vector<Vertex>& vertices);
+	
+	void SetVertexBoneDataToDefault(Vertex& vertex);
+	void SetVertexBoneData(Vertex& vertex, int boneID, float weight);
+	void ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
 
 	std::vector<Vertex> m_vertices;
 	std::vector<std::unique_ptr<Mesh>> m_meshs;
 	std::string directory;
 	std::vector<std::string> m_texture_loaded;
-};
 
+	std::map<std::string, BoneInfo> m_boneInfoMap;
+	int m_boneCounter = 0;
+};

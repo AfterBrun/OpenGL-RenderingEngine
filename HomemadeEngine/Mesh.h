@@ -6,11 +6,16 @@
 #include "texture.h"
 #include "ShaderProgram.h"
 
+#define MAX_BONE_INFLUENCE 4
+
 struct Vertex {
 	glm::vec3 Position;
 	glm::vec3 Normal;
 	glm::vec2 TexCoord;
 	glm::vec3 Tangent;
+
+	int boneIDs[MAX_BONE_INFLUENCE]; //이 버텍스에 영향을 끼칠 bone들 ID가 담긴 배열(최대 4개)
+	float weights[MAX_BONE_INFLUENCE]; //각 bone들의 영향 정도가 담긴 배열
 };
 
 class Mesh
@@ -25,7 +30,6 @@ public:
 	std::shared_ptr<buffer> GetElementBuffer() const { return m_ebo; }
 	uint32_t GetElemetCount() const { return m_indicesCount; }
 	void Draw(const ShaderProgram* program);
-	void DrawBox(ShaderProgram* program);
 	std::vector<std::unique_ptr<texture>>* GetMaterialArrayPtr() { return &m_materials; }
 	~Mesh() {};
 private:

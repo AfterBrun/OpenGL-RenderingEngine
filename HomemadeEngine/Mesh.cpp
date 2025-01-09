@@ -22,10 +22,11 @@ void Mesh::Init(std::vector<Vertex>& vertex, std::vector<uint32_t>& indices) {
 	m_vao->SetAttributePointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Normal));
 	m_vao->SetAttributePointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, TexCoord));
     m_vao->SetAttributePointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, Tangent));
+    m_vao->SetAttributeIPointer(4, 4, GL_INT, sizeof(Vertex), offsetof(Vertex, boneIDs));
+    m_vao->SetAttributePointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), offsetof(Vertex, weights));
 }
 
 void Mesh::Draw(const ShaderProgram* program) {
-    //program->Use();
     m_vao->Bind();
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
@@ -163,21 +164,3 @@ void Mesh::CalcTangent(std::vector<Vertex>& vertices, std::vector<uint32_t>& ind
         vertices[i].Tangent = glm::normalize(tangents[i]);
     }
 }
-
-/*
-void Mesh::DrawBox(ShaderProgram* program) {
-    program->Use();
-	m_vao->Bind();
-    if (!m_materials.empty()) {
-        glActiveTexture(GL_TEXTURE0);
-        m_materials[0]->Bind();
-        program->SetUniform("material.texture_diffuse1", 0);
-
-        glActiveTexture(GL_TEXTURE1);
-        m_materials[1]->Bind();
-        program->SetUniform("material.texture_specular1", 1);
-    }
-
-	glDrawElements(GL_TRIANGLES, m_indicesCount, GL_UNSIGNED_INT, 0);
-}
-*/
