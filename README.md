@@ -40,7 +40,7 @@
 
 
 ### 6. Future Study List
-* Skeletal Animation
+* Skeletal Animation(work in progress)
 * Bloom
 * PBR(Physics based rendering)
 * Cascaded Shadow Mapping
