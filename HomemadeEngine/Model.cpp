@@ -36,26 +36,13 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene) {
 }
 
 void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
-	Vertex vertex;
+	std::vector<Vertex> vertices;
+	//Vertex vertex;
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-		glm::vec3 vector;
-		vector.x = mesh->mVertices[i].x;
-		vector.y = mesh->mVertices[i].y;
-		vector.z = mesh->mVertices[i].z;
-		vertex.Position = vector;
-
-		vector.x = mesh->mNormals[i].x;
-		vector.y = mesh->mNormals[i].y;
-		vector.z = mesh->mNormals[i].z;
-		vertex.Normal = vector;
-
-		/*
-		vector.x = mesh->mTangents[i].x;
-		vector.y = mesh->mTangents[i].y;
-		vector.z = mesh->mTangents[i].z;
-		vertex.Tangent = vector;
-		*/
+		Vertex vertex;
+		vertex.Position = AssimpGLMhelper::atog_vec3(mesh->mVertices[i]);
+		vertex.Normal = AssimpGLMhelper::atog_vec3(mesh->mNormals[i]);
 
 		if (mesh->mTextureCoords[0]) // mesh가 텍스처 좌표를 가지고 있는가?
 		{
@@ -67,9 +54,8 @@ void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		else {
 			vertex.TexCoord = glm::vec2(0.0f, 0.0f);
 		}
-		m_vertices.push_back(vertex);
+		vertices.push_back(vertex);
 	}
-
 
 
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -78,9 +64,10 @@ void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
-	m_meshs.push_back(Mesh::Create(m_vertices, indices));
-	m_vertices.clear();
-
+	m_meshs.push_back(Mesh::Create(vertices, indices));
+	
+	//ExtractBoneWeightForVertices(vertices, mesh, scene);
+	
 	if (mesh->mMaterialIndex >= 0)
 	{
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
@@ -138,4 +125,21 @@ void Model::SetVertexBoneDataToDefault(Vertex& vertex)
 		vertex.boneIDs[i] = -1;
 		vertex.weights[i] = 0.0f;
 	}
+}
+
+void Model::SetVertexBoneData(Vertex& vertex, int boneID, float weight)
+{
+	for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+	{
+		if (vertex.boneIDs[i] < 0) {
+			vertex.boneIDs[i] = boneID;
+			vertex.weights[i] = weight;
+			break;
+		}
+	}
+}
+
+void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene) 
+{
+
 }

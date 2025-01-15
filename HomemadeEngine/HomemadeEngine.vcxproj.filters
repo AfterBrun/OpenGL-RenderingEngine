@@ -177,6 +177,12 @@
     <ClInclude Include="Frustum.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="animData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpGLMhelper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Desktop\wall.jpg">

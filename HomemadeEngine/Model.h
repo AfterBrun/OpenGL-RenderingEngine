@@ -2,15 +2,12 @@
 
 #include "common.h"
 #include "Mesh.h"
+#include "animData.h"
+#include "AssimpGLMhelper.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
-struct BoneInfo {
-	int id;
-	glm::mat4 offset;
-};
 
 class Model
 {
@@ -30,7 +27,6 @@ private:
 	void SetVertexBoneData(Vertex& vertex, int boneID, float weight);
 	void ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene);
 
-	std::vector<Vertex> m_vertices;
 	std::vector<std::unique_ptr<Mesh>> m_meshs;
 	std::string directory;
 	std::vector<std::string> m_texture_loaded;
