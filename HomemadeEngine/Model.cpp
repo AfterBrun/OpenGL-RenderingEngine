@@ -11,10 +11,20 @@ std::unique_ptr<Model> Model::LoadModel(const char* path) {
 bool Model::LoadWithAssimp(std::string path) {
 	Assimp::Importer importer;
 	auto fileType = path.substr(path.find_last_of("."), path.length());
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-	if (std::strcmp(fileType.c_str(), ".fbx") == 0) { //파일이 fbx일 경우 텍스처를 뒤집지 않음
+	const aiScene* scene;
+	if (std::strcmp(fileType.c_str(), ".fbx") == 0 && std::strcmp(fileType.c_str(), ".dae") == 0) { //파일이 fbx일 경우 텍스처를 뒤집지 않음
 		scene = importer.ReadFile(path, aiProcess_Triangulate);
 	}
+	else if (std::strcmp(fileType.c_str(), ".dae") == 0) //파일이 dae일 경우
+	{
+		
+		scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+	}
+	else
+	{
+		scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	}
+
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 		SPDLOG_INFO("Failed to load Model with Assimp: {}", importer.GetErrorString());
 		return false;
@@ -84,6 +94,12 @@ void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 void Model::loadMaterialTextures(aiMaterial* material, aiTextureType type, const char* string) {
 	unsigned int material_count = material->GetTextureCount(type);
+	if (material_count == 0)
+	{
+		auto in = image::CreateFromFile("./asset/model/vampire/textures/Vampire_normal.png");
+		auto mat = texture::CreateFromImage(in.get(), string);
+		m_meshs.back()->GetMaterialArrayPtr()->push_back(std::move(mat));
+	}
 	//SPDLOG_INFO("{} : {}", string, material_count);
 	for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
 	{

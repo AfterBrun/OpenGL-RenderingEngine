@@ -28,24 +28,24 @@ void Mesh::Init(std::vector<Vertex>& vertex, std::vector<uint32_t>& indices) {
 
 void Mesh::Draw(const ShaderProgram* program) {
     m_vao->Bind();
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNR = 1;
+    unsigned int diffuseNr = 0;
+    unsigned int specularNr = 0;
+    unsigned int normalNR = 0;
     for (int i = 0; i < m_materials.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i);
         std::string number;
         std::string type = m_materials[i]->GetTypeString();
         if (type == "texture_diffuse") {
-            number = std::to_string(diffuseNr);
             diffuseNr++;
+            number = std::to_string(diffuseNr);
         }
         else if (type == "texture_specular") {
-            number = std::to_string(specularNr);
             specularNr++;
+            number = std::to_string(specularNr);
         }
         else if (type == "texture_normal") {
-            number = std::to_string(normalNR);
             normalNR++;
+            number = std::to_string(normalNR);
         }
         program->SetUniform(("material." + type + number).c_str(), i);
         m_materials[i]->Bind();

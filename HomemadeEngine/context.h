@@ -80,6 +80,7 @@ private:
 
 	//model
 	std::unique_ptr<Model> m_backpack = nullptr;
+	std::unique_ptr<Model> m_vampire = nullptr;
 
 	//texture
 	std::unique_ptr<texture> textureBox1 = nullptr;

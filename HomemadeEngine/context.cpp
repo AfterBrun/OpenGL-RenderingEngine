@@ -66,8 +66,9 @@ bool context::Init() {
 	m_plane = Mesh::CreatePlane();
 	m_brickwall = Mesh::CreatePlane();
 
-	//°¡¹æ ¸ðµ¨ ·Îµù
+	//¸ðµ¨ ·Îµù
 	m_backpack = Model::LoadModel("./asset/model/backpack/backpack.obj");
+	m_vampire = Model::LoadModel("./asset/model/vampire/dancing_vampire.dae");
 
 	auto container2 = image::CreateFromFile("./asset/texture/container2.png");			//ÀÌ¹ÌÁö »ý¼º
 	auto container2_metal = image::CreateFromFile("./asset/texture/container2_specular.png");
@@ -117,7 +118,7 @@ bool context::Init() {
 	camera = camera::Create(cameraPos, cameraFront, cameraUp);
 
 	//½¦µµ¿ì ¸Ê »ý¼º
-	m_shadowMap = ShadowMap::Create(8192, 8192);
+	m_shadowMap = ShadowMap::Create(16384, 16384);
 
 	return true;
 }
@@ -199,7 +200,7 @@ void context::Render() {
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	
 	auto view = camera->getViewMatrix();
 	auto projection = glm::perspective(glm::radians(perspectiveProjInfo.fov), 
@@ -339,6 +340,13 @@ void context::RenderScene(const ShaderProgram* program, const glm::mat4& project
 	program->SetUniform("transform", transform);
 	program->SetUniform("modelTransform", modelTransform);
 	m_backpack->Draw(program);
+	
+	modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 2.0f, 2.0f)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(0.03f, 0.03f, 0.03f));
+	transform = projection * view * modelTransform;
+	program->SetUniform("transform", transform);
+	program->SetUniform("modelTransform", modelTransform);
+	m_vampire->Draw(program);
 	
 	modelTransform =
 		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f)) *
