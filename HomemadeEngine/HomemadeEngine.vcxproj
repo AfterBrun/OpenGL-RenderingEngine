@@ -176,6 +176,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bone.cpp" />
     <ClCompile Include="buffer.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="common.cpp" />
@@ -225,6 +226,7 @@
   <ItemGroup>
     <ClInclude Include="animData.h" />
     <ClInclude Include="AssimpGLMhelper.h" />
+    <ClInclude Include="Bone.h" />
     <ClInclude Include="buffer.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="common.h" />

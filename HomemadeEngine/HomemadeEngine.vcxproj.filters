@@ -84,6 +84,9 @@
     <ClCompile Include="Frustum.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\texture.fs" />
@@ -181,6 +184,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="AssimpGLMhelper.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

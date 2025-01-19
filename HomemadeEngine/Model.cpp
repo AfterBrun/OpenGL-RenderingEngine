@@ -41,6 +41,9 @@ void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
 		Vertex vertex;
+
+		SetVertexBoneDataToDefault(vertex); //boneID, weights 디폴트 설정
+
 		vertex.Position = AssimpGLMhelper::atog_vec3(mesh->mVertices[i]);
 		vertex.Normal = AssimpGLMhelper::atog_vec3(mesh->mNormals[i]);
 
@@ -64,9 +67,9 @@ void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 		for (unsigned int j = 0; j < face.mNumIndices; j++)
 			indices.push_back(face.mIndices[j]);
 	}
-	m_meshs.push_back(Mesh::Create(vertices, indices));
 	
-	//ExtractBoneWeightForVertices(vertices, mesh, scene);
+	ExtractBoneWeightForVertices(vertices, mesh, scene);
+	m_meshs.push_back(Mesh::Create(vertices, indices));
 	
 	if (mesh->mMaterialIndex >= 0)
 	{
@@ -141,5 +144,30 @@ void Model::SetVertexBoneData(Vertex& vertex, int boneID, float weight)
 
 void Model::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene) 
 {
-
+	for (int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++)
+	{
+		int boneID = -1;
+		std::string boneName = mesh->mBones[boneIndex]->mName.C_Str(); //루프를 돌며 메쉬의 모든 본의 이름을 순회
+		if (m_boneInfoMap.find(boneName) == m_boneInfoMap.end()) //만약 멤버 map에 본의 이름이 저장되어있지 않다면 새로 추가
+		{
+			BoneInfo newBoneInfo;
+			newBoneInfo.id = m_boneCounter;
+			newBoneInfo.offset = AssimpGLMhelper::atog_mat4x4(mesh->mBones[boneIndex]->mOffsetMatrix);
+			m_boneInfoMap.insert({ boneName.c_str(), newBoneInfo });
+			boneID = m_boneCounter;
+			m_boneCounter++;
+		}
+		else
+		{
+			boneID = m_boneInfoMap[boneName].id;
+		}
+		auto weights = mesh->mBones[boneIndex]->mWeights;
+		auto numWeights = mesh->mBones[boneIndex]->mNumWeights;
+		for (unsigned int weightIndex = 0; weightIndex < numWeights; weightIndex++)
+		{
+			unsigned int vertexID = weights[weightIndex].mVertexId;
+			float weight = weights[weightIndex].mWeight;
+			SetVertexBoneData(vertices[vertexID], boneID, weight);
+		}
+	}
 }
