@@ -1,11 +1,12 @@
 #include "Bone.h"
 
-
+/*
 std::unique_ptr<Bone> Bone::NewBone(const std::string name, int ID, const aiNodeAnim* channel)
 {
 	auto boneInstance = std::unique_ptr<Bone>(new Bone(name, ID, channel));
 	return std::move(boneInstance);
 }
+*/
 
 void Bone::Update(float animationTime)
 {

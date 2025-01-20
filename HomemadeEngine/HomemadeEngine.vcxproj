@@ -176,6 +176,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Bone.cpp" />
     <ClCompile Include="buffer.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -224,6 +225,7 @@
     <None Include="shader\texture.vs" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="animData.h" />
     <ClInclude Include="AssimpGLMhelper.h" />
     <ClInclude Include="Bone.h" />

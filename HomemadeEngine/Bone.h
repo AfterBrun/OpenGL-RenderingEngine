@@ -24,7 +24,8 @@ struct KeyScale
 class Bone
 {
 public:
-	std::unique_ptr<Bone>		NewBone(const std::string name, int ID, const aiNodeAnim* channel);
+	//std::unique_ptr<Bone>		NewBone(const std::string name, int ID, const aiNodeAnim* channel);
+								Bone(const std::string name, int ID, const aiNodeAnim* channel);
 	void						Update(float animationTime);
 
 	glm::mat4					GetLocalTransformation() const { return m_localTransformation; }
@@ -36,7 +37,6 @@ public:
 
 							   ~Bone() {};
 private:
-								Bone(const std::string name, int ID, const aiNodeAnim* channel);
 
 	float						GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime);
 	glm::mat4					GetInterpolatePosition(float animationTime);

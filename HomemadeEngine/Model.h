@@ -14,6 +14,8 @@ class Model
 public:
 	static std::unique_ptr<Model> LoadModel(const char* path);
 	void Draw(const ShaderProgram* program) const; 
+	std::map<std::string, BoneInfo>& GetBoneInfoMap() { return m_boneInfoMap; }
+	int& GetBoneCount() { return m_boneCounter; }
 	~Model() {};
 private:
 	Model() {};
