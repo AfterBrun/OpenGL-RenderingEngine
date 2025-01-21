@@ -1,18 +1,13 @@
 #include "Animation.h"
 
+
 std::unique_ptr<Animation> Animation::NewAnimation(const char* animationPath, Model* model)
 {
-    auto animationInstance = std::unique_ptr<Animation>(new Animation());
-    animationInstance->Init(animationPath, model);
-    return std::move(animationInstance);
+    auto instance = std::unique_ptr<Animation>(new Animation(animationPath, model));
+    return std::move(instance);
 }
 
-const Bone* Animation::FindBone(const std::string name)
-{
-    return nullptr;
-}
-
-void Animation::Init(const char* animationPath, Model* model)
+Animation::Animation(const char* animationPath, Model* model)
 {
     Assimp::Importer importer;
     const std::string filePath = animationPath;
@@ -23,6 +18,19 @@ void Animation::Init(const char* animationPath, Model* model)
     ReadNodesFromAssimp(&m_rootNode, scene->mRootNode);
     ReadMissingBones(animation, model);
 }
+
+
+Bone* Animation::FindBone(const std::string name)
+{
+    auto iter = std::find_if(m_bones.begin(), m_bones.end(),
+        [&](const Bone& bone)
+        {
+            return bone.GetName() == name;
+        });
+    if (iter == m_bones.end()) return nullptr;
+    else return &(*iter);
+}
+
 
 void Animation::ReadNodesFromAssimp(AssimpNodeData* root, const aiNode* assimpRoot)
 {

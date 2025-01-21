@@ -52,6 +52,7 @@ bool context::Init() {
 	instancingProgram = ShaderProgram::CreateShaderProgram("./shader/instancing.vs", "./shader/instancing.fs");
 	terrainProgram = ShaderProgram::CreateShaderProgram("./shader/terrain.vs", "./shader/terrain.fs");
 	normalProgram = ShaderProgram::CreateShaderProgram("./shader/normal.vs", "./shader/normal.fs");
+	skeletalProgram = ShaderProgram::CreateShaderProgram("./shader/skeletalAnimation.vs", "./shader/skeletalAnimation.fs");
 
 
 	//program 실패 여부 판정
@@ -69,6 +70,10 @@ bool context::Init() {
 	//모델 로딩
 	m_backpack = Model::LoadModel("./asset/model/backpack/backpack.obj");
 	m_vampire = Model::LoadModel("./asset/model/vampire/dancing_vampire.dae");
+	m_animation = Animation::NewAnimation("./asset/model/vampire/dancing_vampire.dae", m_vampire.get());	 
+	m_animator = Animator::NewAnimator(m_animation.get());
+	SPDLOG_INFO("final transform matrices: {}", m_animator->GetFinalBoneMatrices().size());
+
 
 	auto container2 = image::CreateFromFile("./asset/texture/container2.png");			//이미지 생성
 	auto container2_metal = image::CreateFromFile("./asset/texture/container2_specular.png");
@@ -124,10 +129,9 @@ bool context::Init() {
 }
 
 void context::Render() {
-	static double previous = glfwGetTime();
-	double current = glfwGetTime();
-	deltaTime = (float)current - (float)previous;
-	previous = current;
+	float currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
 
 	//렌더링 영역
 	if (ImGui::Begin("Configure UI")) {
@@ -231,6 +235,26 @@ void context::Render() {
 	glActiveTexture(GL_TEXTURE0);
 
 	RenderScene(lightProgram.get(), projection, view); //씬 드로우
+
+	//Skeletal animation Testing
+	//==================================================================================================================
+	
+	m_animator->UpdateAnimation(deltaTime);
+	
+	skeletalProgram->Use();
+	const auto& animationTransforms = m_animator->GetFinalBoneMatrices();
+	for (int i = 0; i < animationTransforms.size(); ++i)
+		skeletalProgram->SetUniform(("finalBonesMatrices[" + std::to_string(i) + "]").c_str(), animationTransforms[i]);
+
+	auto modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 2.0f, 2.0f)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+	transform = projection * view * modelTransform;
+	skeletalProgram->SetUniform("transform", transform);
+	//skeletalProgram->SetUniform("modelTransform", modelTransform);
+	m_vampire->Draw(skeletalProgram.get());
+	
+	//==================================================================================================================
+
 
 	terrainProgram->Use();
 	terrainProgram->SetUniform("lightTransform", lightOrtho * lightView);
@@ -341,12 +365,6 @@ void context::RenderScene(const ShaderProgram* program, const glm::mat4& project
 	program->SetUniform("modelTransform", modelTransform);
 	m_backpack->Draw(program);
 	
-	modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 2.0f, 2.0f)) *
-		glm::scale(glm::mat4(1.0f), glm::vec3(0.03f, 0.03f, 0.03f));
-	transform = projection * view * modelTransform;
-	program->SetUniform("transform", transform);
-	program->SetUniform("modelTransform", modelTransform);
-	m_vampire->Draw(program);
 	
 	modelTransform =
 		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 3.0f, 0.0f)) *

@@ -17,8 +17,8 @@ struct AssimpNodeData
 class Animation
 {
 public:
-	std::unique_ptr<Animation>						NewAnimation(const char* animationPath, Model* model);
-	const Bone*										FindBone(const std::string name);
+	static std::unique_ptr<Animation>				NewAnimation(const char* animationPath, Model* model);
+	Bone*											FindBone(const std::string name);
 	inline float									GetTickPerSecond() const { return m_tickPerSecond; }
 	inline float									GetDuration() const { return m_duration; }
 	inline const AssimpNodeData*					GetRootNode() const { return &m_rootNode; }
@@ -26,8 +26,7 @@ public:
 
 												   ~Animation() {};
 private:
-													Animation() {};
-	void											Init(const char* animationPath, Model* model);
+													Animation(const char* animationPath, Model* model);
 	void											ReadNodesFromAssimp(AssimpNodeData* root, const aiNode* assimpRoot);
 	void											ReadMissingBones(const aiAnimation* animation, Model* model);
 	

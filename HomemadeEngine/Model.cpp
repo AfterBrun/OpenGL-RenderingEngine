@@ -17,7 +17,6 @@ bool Model::LoadWithAssimp(std::string path) {
 	}
 	else if (std::strcmp(fileType.c_str(), ".dae") == 0) //파일이 dae일 경우
 	{
-		
 		scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
 	}
 	else

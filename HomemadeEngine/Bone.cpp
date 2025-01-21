@@ -1,50 +1,5 @@
 #include "Bone.h"
 
-/*
-std::unique_ptr<Bone> Bone::NewBone(const std::string name, int ID, const aiNodeAnim* channel)
-{
-	auto boneInstance = std::unique_ptr<Bone>(new Bone(name, ID, channel));
-	return std::move(boneInstance);
-}
-*/
-
-void Bone::Update(float animationTime)
-{
-	glm::mat4 translate = GetInterpolatePosition(animationTime);
-	glm::mat4 rotation = GetInterpolateRotation(animationTime);
-	glm::mat4 scale = GetInterpolateScaling(animationTime);
-	m_localTransformation = translate * rotation * scale;
-}
-
-int Bone::GetPositionIndex(float animationTime) const
-{
-	for (int index = 0; index < m_NumPositions - 1; index++)
-	{
-		if (animationTime < m_keyPositions[index + 1].timeStamp)
-			return index;
-	}
-	assert(0);
-}
-
-int Bone::GetRotationIndex(float animationTime) const
-{
-	for (int index = 0; index < m_NumRotations - 1; index++)
-	{
-		if (animationTime < m_keyRotations[index + 1].timeStamp)
-			return index;
-	}
-	assert(0);
-}
-
-int Bone::GetScaleIndex(float animationTime) const
-{
-	for (int index = 0; index < m_NumScalings - 1; index++)
-	{
-		if (animationTime < m_keyScales[index + 1].timeStamp)
-			return index;
-	}
-	assert(0);
-}
 
 Bone::Bone(const std::string name, int ID, const aiNodeAnim* channel)
 	:
@@ -84,6 +39,45 @@ Bone::Bone(const std::string name, int ID, const aiNodeAnim* channel)
 	}
 
 }
+
+void Bone::Update(float animationTime)
+{
+	glm::mat4 translate = GetInterpolatePosition(animationTime);
+	glm::mat4 rotation = GetInterpolateRotation(animationTime);
+	glm::mat4 scale = GetInterpolateScaling(animationTime);
+	m_localTransformation = translate * rotation * scale;
+}
+
+int Bone::GetPositionIndex(float animationTime) const
+{
+	for (int index = 0; index < m_NumPositions - 1; index++)
+	{
+		if (animationTime < m_keyPositions[index + 1].timeStamp)
+			return index;
+	}
+	assert(0);
+}
+
+int Bone::GetRotationIndex(float animationTime) const
+{
+	for (int index = 0; index < m_NumRotations - 1; index++)
+	{
+		if (animationTime < m_keyRotations[index + 1].timeStamp)
+			return index;
+	}
+	assert(0);
+}
+
+int Bone::GetScaleIndex(float animationTime) const
+{
+	for (int index = 0; index < m_NumScalings - 1; index++)
+	{
+		if (animationTime < m_keyScales[index + 1].timeStamp)
+			return index;
+	}
+	assert(0);
+}
+
 
 float Bone::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animationTime)
 {

@@ -13,6 +13,7 @@
 #include "FrameBuffer.h"
 #include "ShadowMap.h"
 #include "Terrain.h"
+#include "Animator.h"
 
 
 class context
@@ -54,6 +55,7 @@ private:
 	std::unique_ptr<ShaderProgram> instancingProgram = nullptr;
 	std::unique_ptr<ShaderProgram> terrainProgram = nullptr;
 	std::unique_ptr<ShaderProgram> normalProgram = nullptr;
+	std::unique_ptr<ShaderProgram> skeletalProgram = nullptr;
 
 
 	std::unique_ptr<vertexLayout> instanceVao = nullptr;
@@ -81,6 +83,8 @@ private:
 	//model
 	std::unique_ptr<Model> m_backpack = nullptr;
 	std::unique_ptr<Model> m_vampire = nullptr;
+	std::unique_ptr<Animation> m_animation = nullptr;
+	std::unique_ptr<Animator> m_animator = nullptr;
 
 	//texture
 	std::unique_ptr<texture> textureBox1 = nullptr;
@@ -132,7 +136,8 @@ private:
 	float m_gamma{ 1.0f };
 
 	//delta time
-	float deltaTime;
+	float deltaTime = 0.0f;
+	float lastFrame = 0.0f;
 
 	std::vector<glm::vec3> m_grassPos;
 
