@@ -8,8 +8,6 @@ layout(location = 4) in ivec4 boneIds;
 layout(location = 5) in vec4 weights;
 
 uniform mat4 transform;
-//uniform mat4 view;
-//uniform mat4 model;
 
 const int MAX_BONES = 100;
 const int MAX_BONE_INFLUENCE = 4;
@@ -32,10 +30,7 @@ void main()
         vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(pos,1.0f);
         totalPosition += localPosition * weights[i];
         vec3 localNormal = mat3(finalBonesMatrices[boneIds[i]]) * norm;
-   }
-	
-    //mat4 viewModel = view * model;
-    //gl_Position =  projection * viewModel * totalPosition;
+    }
     gl_Position =  transform * totalPosition;
 	TexCoords = tex;
 }

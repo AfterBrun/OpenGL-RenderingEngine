@@ -82,9 +82,14 @@ private:
 
 	//model
 	std::unique_ptr<Model> m_backpack = nullptr;
+
 	std::unique_ptr<Model> m_vampire = nullptr;
-	std::unique_ptr<Animation> m_animation = nullptr;
-	std::unique_ptr<Animator> m_animator = nullptr;
+	std::unique_ptr<Animation> m_animation_vampire = nullptr;
+	std::unique_ptr<Animator> m_animator_vampire = nullptr;
+
+	std::unique_ptr<Model> m_dragon = nullptr;
+	std::unique_ptr<Animation> m_animation_dragon = nullptr;
+	std::unique_ptr<Animator> m_animator_dragon = nullptr;
 
 	//texture
 	std::unique_ptr<texture> textureBox1 = nullptr;
@@ -134,6 +139,9 @@ private:
 
 	//gamma
 	float m_gamma{ 1.0f };
+
+	//animation
+	bool m_animation_toggle = true;
 
 	//delta time
 	float deltaTime = 0.0f;

@@ -93,12 +93,14 @@ void Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
 void Model::loadMaterialTextures(aiMaterial* material, aiTextureType type, const char* string) {
 	unsigned int material_count = material->GetTextureCount(type);
-	if (material_count == 0)
+
+	if (material_count == 0 && string == "texture_normal")
 	{
-		auto in = image::CreateFromFile("./asset/model/vampire/textures/Vampire_normal.png");
+		auto in = image::CreateFromFile("./asset/model/mutant/textures/Mutant_normal.png");
 		auto mat = texture::CreateFromImage(in.get(), string);
 		m_meshs.back()->GetMaterialArrayPtr()->push_back(std::move(mat));
 	}
+
 	//SPDLOG_INFO("{} : {}", string, material_count);
 	for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
 	{

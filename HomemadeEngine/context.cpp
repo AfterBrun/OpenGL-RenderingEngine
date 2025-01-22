@@ -69,10 +69,16 @@ bool context::Init() {
 
 	//모델 로딩
 	m_backpack = Model::LoadModel("./asset/model/backpack/backpack.obj");
+
 	m_vampire = Model::LoadModel("./asset/model/vampire/dancing_vampire.dae");
-	m_animation = Animation::NewAnimation("./asset/model/vampire/dancing_vampire.dae", m_vampire.get());	 
-	m_animator = Animator::NewAnimator(m_animation.get());
-	SPDLOG_INFO("final transform matrices: {}", m_animator->GetFinalBoneMatrices().size());
+	m_animation_vampire = Animation::NewAnimation("./asset/model/vampire/dancing_vampire.dae", m_vampire.get());	 
+	m_animator_vampire = Animator::NewAnimator(m_animation_vampire.get());
+	SPDLOG_INFO("final transform matrices: {}", m_animator_vampire->GetFinalBoneMatrices().size());
+
+	m_dragon = Model::LoadModel("./asset/model/mutant/mutant.dae");
+	m_animation_dragon = Animation::NewAnimation("./asset/model/mutant/mutant.dae", m_dragon.get());
+	m_animator_dragon = Animator::NewAnimator(m_animation_dragon.get());
+	SPDLOG_INFO("final transform matrices: {}", m_animator_dragon->GetFinalBoneMatrices().size());
 
 
 	auto container2 = image::CreateFromFile("./asset/texture/container2.png");			//이미지 생성
@@ -158,7 +164,11 @@ void context::Render() {
 			ImGui::DragFloat("m.shininess", &m_material.shininess, 1.0f, 1.0f, 256.0f); 
 		}
 
-		if (ImGui::CollapsingHeader("Shadow Map", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (ImGui::CollapsingHeader("Animation", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::Checkbox("Animation Toggle", &m_animation_toggle);
+		}
+
+		if (ImGui::CollapsingHeader("Shadow Map"/*, ImGuiTreeNodeFlags_DefaultOpen */ )) {
 			ImGui::Image((ImTextureID)m_shadowMap->GetDepthTexture()->Get(), ImVec2(256, 256), ImVec2(0, 1), ImVec2(1, 0));
 		}
 	}
@@ -238,21 +248,36 @@ void context::Render() {
 
 	//Skeletal animation Testing
 	//==================================================================================================================
-	
-	m_animator->UpdateAnimation(deltaTime);
-	
-	skeletalProgram->Use();
-	const auto& animationTransforms = m_animator->GetFinalBoneMatrices();
-	for (int i = 0; i < animationTransforms.size(); ++i)
-		skeletalProgram->SetUniform(("finalBonesMatrices[" + std::to_string(i) + "]").c_str(), animationTransforms[i]);
-
+	lightProgram->Use();
+	if (m_animation_toggle == true) {
+		m_animator_dragon->UpdateAnimation(deltaTime);
+		const auto& animationTransforms = m_animator_dragon->GetFinalBoneMatrices();
+		for (int i = 0; i < animationTransforms.size(); ++i)
+			lightProgram->SetUniform(("finalBonesMatrices[" + std::to_string(i) + "]").c_str(), animationTransforms[i]);
+	}
 	auto modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 2.0f, 2.0f)) *
 		glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 2.0f));
 	transform = projection * view * modelTransform;
-	skeletalProgram->SetUniform("transform", transform);
-	//skeletalProgram->SetUniform("modelTransform", modelTransform);
-	m_vampire->Draw(skeletalProgram.get());
+	lightProgram->SetUniform("entity_animation", true);
+	lightProgram->SetUniform("transform", transform);
+	lightProgram->SetUniform("modelTransform", modelTransform);
+	m_dragon->Draw(lightProgram.get());
 	
+	/*
+	if (m_animation_toggle == true) {
+		m_animator_vampire->UpdateAnimation(deltaTime);
+		const auto& animationTransforms = m_animator_vampire->GetFinalBoneMatrices();
+		for (int i = 0; i < animationTransforms.size(); ++i)
+			lightProgram->SetUniform(("finalBonesMatrices[" + std::to_string(i) + "]").c_str(), animationTransforms[i]);
+	}
+	modelTransform = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, 2.0f, 7.0f)) *
+		glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+	transform = projection * view * modelTransform;
+	lightProgram->SetUniform("entity_animation", true);
+	lightProgram->SetUniform("transform", transform);
+	lightProgram->SetUniform("modelTransform", modelTransform);
+	m_vampire->Draw(lightProgram.get());
+	*/
 	//==================================================================================================================
 
 
@@ -329,6 +354,7 @@ void context::RenderScene(const ShaderProgram* program, const glm::mat4& project
 	auto transform = projection * view * modelTransform;
 	program->SetUniform("transform", transform);
 	program->SetUniform("modelTransform", modelTransform);
+	program->SetUniform("entity_animation", false);
 	m_floor->Draw(program);
 
 	modelTransform =
