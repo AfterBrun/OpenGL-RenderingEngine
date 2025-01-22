@@ -10,6 +10,7 @@
 3. Shadow Map
 4. Height Map을 이용한 지형 렌더링
 5. Assimp를 활용한 모델 불러오기
+6. Skeletal Animation (DAE file)
 
 ### Work in progress
 * Skeletal animation
@@ -43,7 +44,6 @@
 
 
 ### 6. Future Study List
-* Skeletal Animation(work in progress)
 * Bloom
 * PBR(Physics based rendering)
 * Cascaded Shadow Mapping
