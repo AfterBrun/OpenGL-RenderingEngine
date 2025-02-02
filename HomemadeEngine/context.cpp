@@ -75,8 +75,8 @@ bool context::Init() {
 	m_animator_vampire = Animator::NewAnimator(m_animation_vampire.get());
 	SPDLOG_INFO("final transform matrices: {}", m_animator_vampire->GetFinalBoneMatrices().size());
 
-	m_dragon = Model::LoadModel("./asset/model/mutant/mutant.dae");
-	m_animation_dragon = Animation::NewAnimation("./asset/model/mutant/mutant.dae", m_dragon.get());
+	m_dragon = Model::LoadModel("./asset/model/knight/Walking.dae");
+	m_animation_dragon = Animation::NewAnimation("./asset/model/knight/Walking.dae", m_dragon.get());
 	m_animator_dragon = Animator::NewAnimator(m_animation_dragon.get());
 	SPDLOG_INFO("final transform matrices: {}", m_animator_dragon->GetFinalBoneMatrices().size());
 
@@ -135,7 +135,7 @@ bool context::Init() {
 }
 
 void context::Render() {
-	float currentFrame = glfwGetTime();
+	double currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
 
@@ -263,7 +263,6 @@ void context::Render() {
 	lightProgram->SetUniform("modelTransform", modelTransform);
 	m_dragon->Draw(lightProgram.get());
 	
-	/*
 	if (m_animation_toggle == true) {
 		m_animator_vampire->UpdateAnimation(deltaTime);
 		const auto& animationTransforms = m_animator_vampire->GetFinalBoneMatrices();
@@ -277,6 +276,7 @@ void context::Render() {
 	lightProgram->SetUniform("transform", transform);
 	lightProgram->SetUniform("modelTransform", modelTransform);
 	m_vampire->Draw(lightProgram.get());
+	/*
 	*/
 	//==================================================================================================================
 

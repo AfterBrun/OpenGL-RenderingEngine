@@ -45,6 +45,8 @@ int main() {
 		return -1;
 	} //OpenGL 윈도우 생성
 	glfwMakeContextCurrent(window); //현재 사용할 윈도우 콘텍스트
+	//glfwSwapInterval(0); //수직 동기화 off
+
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		SPDLOG_INFO("Glad load failed");

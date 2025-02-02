@@ -144,8 +144,8 @@ private:
 	bool m_animation_toggle = true;
 
 	//delta time
-	float deltaTime = 0.0f;
-	float lastFrame = 0.0f;
+	double deltaTime = 0.0f;
+	double lastFrame = 0.0f;
 
 	std::vector<glm::vec3> m_grassPos;
 
