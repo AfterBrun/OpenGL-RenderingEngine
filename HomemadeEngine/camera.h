@@ -16,6 +16,7 @@ public:
 	glm::vec3 getCameraUp() { return cameraUp; }
 	glm::vec3 getCameraFront() { return cameraFront; }
 	
+	void updateFlightCamera(); //for flight camera
 
 	glm::mat4 getViewMatrix();
 	~camera() {};
@@ -36,8 +37,8 @@ private:
 
 	float cameraSpeed = 0.0f;
 	float sensitivity = 0.0f;
-	float m_yaw, m_pitch;
-	float m_roll = 2.0f;
+	float m_yaw = 0.0f, m_pitch = 0.0f;
+	float m_roll = 0.0f;
 
 	bool ButtonPressed = false;
 	float deltaTime;
