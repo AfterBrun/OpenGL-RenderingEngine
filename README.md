@@ -13,7 +13,7 @@
 6. Skeletal Animation (DAE file)
 
 ### Work in progress
-* Skeletal animation
+* Mouse Picking
 
 [기술 설명서 링크](https://chalk-playroom-034.notion.site/OpenGL-Renderer-1697e21379dd8007aaacf9f8b2b6d786?pvs=4)
 
