@@ -2,7 +2,7 @@
 #include "context.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-
+#include "ImGuizmo/ImGuizmo.h"
 
 
 //윈도우 설정 영역

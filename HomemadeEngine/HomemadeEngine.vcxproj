@@ -83,12 +83,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)includes;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)lib\imgui</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(SolutionDir)includes;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <LibraryPath>$(SolutionDir)lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)lib\imgui</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -197,6 +199,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="PickingTexture.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -206,6 +209,7 @@
   <ItemGroup>
     <None Include="asset\model\backpack\backpack.mtl" />
     <None Include="assimp-vc142-mtd.dll" />
+    <None Include="imgui.ini" />
     <None Include="shader\instancing.fs" />
     <None Include="shader\instancing.vs" />
     <None Include="shader\light.fs" />
@@ -226,6 +230,8 @@
     <None Include="shader\terrain.vs" />
     <None Include="shader\texture.fs" />
     <None Include="shader\texture.vs" />
+    <None Include="src\assimp-vc142-mtd.dll" />
+    <None Include="src\imgui.ini" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -251,14 +257,42 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="PickingTexture.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\Animator.h" />
+    <ClInclude Include="src\animData.h" />
+    <ClInclude Include="src\AssimpGLMhelper.h" />
+    <ClInclude Include="src\Bone.h" />
+    <ClInclude Include="src\buffer.h" />
+    <ClInclude Include="src\camera.h" />
+    <ClInclude Include="src\common.h" />
+    <ClInclude Include="src\context.h" />
+    <ClInclude Include="src\FrameBuffer.h" />
+    <ClInclude Include="src\Frustum.h" />
+    <ClInclude Include="src\image.h" />
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\ShaderProgram.h" />
+    <ClInclude Include="src\ShadowMap.h" />
+    <ClInclude Include="src\Terrain.h" />
+    <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\vendor\imgui\imconfig.h" />
+    <ClInclude Include="src\vendor\imgui\imgui.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="src\vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="src\vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="src\vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\vertexLayout.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="vertexLayout.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\Desktop\wall.jpg" />
     <Image Include="asset\cube_texture\skybox\back.jpg" />
     <Image Include="asset\cube_texture\skybox\bottom.jpg" />
     <Image Include="asset\cube_texture\skybox\front.jpg" />

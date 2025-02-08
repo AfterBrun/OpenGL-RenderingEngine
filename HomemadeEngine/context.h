@@ -15,7 +15,6 @@
 #include "Terrain.h"
 #include "Animator.h"
 
-
 class context
 {
 public:
