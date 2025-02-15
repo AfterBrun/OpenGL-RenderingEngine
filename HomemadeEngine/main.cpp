@@ -36,7 +36,6 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	//OpenGL버전 힌트 제공
 
-
 	SPDLOG_INFO("Create Window");
 	auto window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, winName, nullptr, nullptr);
 	if (!window) {
@@ -56,33 +55,32 @@ int main() {
 	auto glVersion = glGetString(GL_VERSION);
 	SPDLOG_INFO("OpenGL Context Version: {}", (const char*)glVersion); //OpenGL 콘텍스트 버전 표시
 
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-
-	
-
-	// Setup Platform/Renderer backends
-	ImGui_ImplGlfw_InitForOpenGL(window, false);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
-	ImGui_ImplOpenGL3_Init();
-	//ImGui_ImplGlfw_InstallCallbacks(window);
-
 	std::unique_ptr<context> Context = context::Create(); //context 생성
 	if (!Context) { return -1; }
-
 	glfwSetWindowUserPointer(window, Context.get()); //user pointer를 설정
 
 	//callback함수 등록
 	//=================================================================================================================================
 	OnFrameBufferSizeChange(window, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glfwSetFramebufferSizeCallback(window, OnFrameBufferSizeChange);
-	glfwSetKeyCallback(window, keyboard_callback);
 	glfwSetCursorPosCallback(window, mouseCursorPosCallback);
 	glfwSetMouseButtonCallback(window, mouseButtonCallback);
+	glfwSetKeyCallback(window, keyboard_callback);
 	//==================================================================================================================================
+	 
+	
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	ImGui::StyleColorsLight(); //Style Color to Light
+	//ImGui::StyleColorsLight(); //Style Color to Dark
 
+	// Setup Platform/Renderer backends
+	ImGui_ImplGlfw_InitForOpenGL(window, true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+	ImGui_ImplOpenGL3_Init();
+	//ImGui_ImplGlfw_InstallCallbacks(window);
 	
 	SPDLOG_INFO("Start Main Loop");
 	while (!glfwWindowShouldClose(window)) {
@@ -131,7 +129,6 @@ void keyboard_callback(GLFWwindow* window, int key, int scancode, int action, in
 	if (key == GLFW_KEY_ESCAPE) {
 		glfwSetWindowShouldClose(window, true);
 	}
-	ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
 }
 
 void mouseCursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
@@ -144,5 +141,4 @@ void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
 	double x, y;
 	glfwGetCursorPos(window, &x, &y);
 	pointer->mouseButtonEvent(button, action, x, y);
-	ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 }
